@@ -1,0 +1,25 @@
+This is README file for Algorithm PA#3
+Author: 李品樺 b07303024
+Date: 2020/12/10
+=====
+DIRECTORY:
+
+bin/	  executable binary
+doc/	  reports
+outputs/  output result
+lib/	  library
+src/ 	  source C++ codes
+utility/  checker
+======
+HOW TO COMPILE:
+
+Then compile the demo, simply follow the following steps
+	make
+======
+HOW TO RUN:
+
+	cd bin/
+	./bin/cb  <input_file_name> <output_file_name>
+	For example,
+	under b07303024_pa3
+	./bin/cb inputs/public_case_1.in outputs/public_case_1.in
