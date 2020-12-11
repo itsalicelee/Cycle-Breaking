@@ -56,9 +56,10 @@ int main(int argc, char* argv[])
     // print adjacency list representation of graph
     for (int i = 0; i < nodeNum; i++)
     {  
-        G.printList(G.head[i], i);  // print all neighboring vertices of vertex i
+        G.printList(i, G.head[i]);  // print all neighboring vertices of vertex i
     }
     G.DFS();
+    G.PrimMST();
 
 
     // for (int i = 0; i < nodeNum; i++)

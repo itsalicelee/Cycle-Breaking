@@ -1,4 +1,5 @@
 #include<iostream>
+#include<vector>
 #include"cycleBreaking.h"
 using namespace std;
 
@@ -62,7 +63,7 @@ Graph::~Graph() {
 }
 
 // print all neighboring vertices of given vertex
-void Graph::printList(Node* ptr, int i)
+void Graph::printList(int i, Node* ptr)
 {
 	while (ptr != nullptr)
 	{   
@@ -77,10 +78,11 @@ void Graph::printList(Node* ptr, int i)
 void Graph::DFS(){
     int time = 0;
     
+
     for(int i = 0; i < nodeNum; i++)
     {
-        cout << "i" << head[i]->val<< endl;
-        if (head[i]->color == 'w')  // 這裡應該是要判斷頭有沒有走過（但頭是ptr怎麼辦）
+        cout << "i: " << head[i]->val<< endl;   // 這裡應該是要判斷頭有沒有走過（但頭是ptr怎麼辦）
+        if (head[i]->color == 'w') 
             DFS_visit(head[i], time);
     }
     
@@ -88,7 +90,7 @@ void Graph::DFS(){
 
 
 
-void Graph::DFS_visit(Node* u, int time)
+void Graph::DFS_visit(Node* u, int& time)
 {
     //cout << "u" << u->val << ":";
     u->color = 'g';
@@ -106,4 +108,11 @@ void Graph::DFS_visit(Node* u, int time)
     u->color = 'b';
     cout << endl;
 
+}
+
+
+void Graph::PrimMST(int Start)
+{
+    for(int i = 0 ;i < nodeNum; i++)
+        cout << head[i][0].val << " ";
 }
