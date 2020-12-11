@@ -42,29 +42,22 @@ int main(int argc, char* argv[])
     fin >> edgeNum;
     
     int start, end, weight;
-    Graph G(edgeNum, nodeNum, graphType); // create a graph
-    Edge edges;
-
+    Edge edges[edgeNum];
+    
     for(size_t i = 0; i < edgeNum; ++i){
         fin >> start >> end >> weight;
-    edges.src = start;
-    edges.dest = end;
-    edges.weight = weight;
-    G.addEdge(edges);
+    edges[i].src = start-1;
+    edges[i].dest = end-1;
+    edges[i].weight = weight;
     }
+    Graph G(edges,edgeNum, nodeNum, graphType); // create a graph
     
     // print adjacency list representation of graph
     for (int i = 0; i < nodeNum; i++)
-    {  
+    {
         G.printList(G.head[i], i);  // print all neighboring vertices of vertex i
     }
-    G.DFS();
 
-
-    // for (int i = 0; i < nodeNum; i++)
-    // {  
-    //     cout << G.head[i]->val << ": " << G.head[i]->d << " " <<  G.head[i]->f << endl;  
-    // }
     //cout << G.isCycle();
     //////////// algorithm start ////////////////
 

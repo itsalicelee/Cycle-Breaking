@@ -17,42 +17,44 @@ Node* Graph::getAdjListNode(int value, int weight, Node* head)
 }
 
 
-Graph::Graph(Edge edges[], int edgeNum, int nodeNum, char graphType)  // constructor
+Graph::Graph(int edgeNum, int nodeNum, char graphType)  // constructor
 {
     // allocate memory
     head = new Node*[nodeNum]();
     this->nodeNum = nodeNum;
+    this->graphType = graphType;
 
     // initialize head pointer for all vertices
     for (int i = 0; i < nodeNum; ++i)
         head[i] = nullptr;
+}
 
+void Graph::addEdge(Edge anEdge)
+{
     // add edges to the directed graph
 
-    for (unsigned i = 0; i < edgeNum; i++)
-    {
-        int src = edges[i].src;
-        int dest = edges[i].dest;
-        int weight = edges[i].weight;
+    int src = anEdge.src;
+    int dest = anEdge.dest;
+    int weight = anEdge.weight;
 
-        // insert in the beginning
-        Node* newNode = getAdjListNode(dest, weight, head[src]);
+    // insert in the beginning
+    Node* newNode = getAdjListNode(dest, weight, head[src]);
 
-        // point head pointer to new node
-        head[src] = newNode;
-        
-        
-        // for undirected graph
-        if (graphType == 'u'){
-            newNode = getAdjListNode(src, weight, head[dest]);
-            // change head pointer to point to the new node
-            head[dest] = newNode;
-        }
-    }
-
+    // point head pointer to new node
+    head[src] = newNode;
     
+    
+    // for undirected graph
+    if (this->graphType == 'u'){
+        newNode = getAdjListNode(src, weight, head[dest]);
+        // change head pointer to point to the new node
+        head[dest] = newNode;
+    }
 }
-	// Destructor
+
+
+
+// Destructor
 Graph::~Graph() {
     for (int i = 0; i < nodeNum; i++)
         delete[] head[i];
@@ -64,10 +66,44 @@ void Graph::printList(Node* ptr, int i)
 {
 	while (ptr != nullptr)
 	{   
-		cout << "(" << i+1 << ", " << ptr->val + 1
+		cout << "(" << i << ", " << ptr->val
 			<< ", " << ptr->cost << ") ";
 
 		ptr = ptr->next;
 	}
 	cout << endl;
+}
+
+void Graph::DFS(){
+    int time = 0;
+    
+    for(int i = 0; i < nodeNum; i++)
+    {
+        cout << "i" << head[i]->val<< endl;
+        if (head[i]->color == 'w')  // 這裡應該是要判斷頭有沒有走過（但頭是ptr怎麼辦）
+            DFS_visit(head[i], time);
+    }
+    
+}
+
+
+
+void Graph::DFS_visit(Node* u, int time)
+{
+    //cout << "u" << u->val << ":";
+    u->color = 'g';
+    Node* v = u->next;
+    while(v != nullptr)
+    {
+        if(v->color == 'w')
+        {
+            cout << v->val << " -> ";
+            v->pi = u;
+            DFS_visit(v,time);
+        }
+        v = v->next;
+    }
+    u->color = 'b';
+    cout << endl;
+
 }
