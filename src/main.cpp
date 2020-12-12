@@ -43,7 +43,7 @@ int main(int argc, char* argv[])
     
     int start, end, weight;
     Graph G(edgeNum, nodeNum, graphType); // create a graph
-    Graph g(nodeNum,graphType);
+    //Graph g(nodeNum,graphType);
     
     Edge edges;
 
@@ -61,13 +61,10 @@ int main(int argc, char* argv[])
         G.printList(i, G.head[i]);  // print all neighboring vertices of vertex i
     }
     G.DFS();
-    G.PrimMST();
+    //G.PrimMST(0);
 
 
-    // for (int i = 0; i < nodeNum; i++)
-    // {  
-    //     cout << G.head[i]->val << ": " << G.head[i]->d << " " <<  G.head[i]->f << endl;  
-    // }
+
     //cout << G.isCycle();
     //////////// algorithm start ////////////////
 

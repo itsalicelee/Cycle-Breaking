@@ -5,13 +5,13 @@
 using namespace std;
 
 
+
 Node* Graph::getAdjListNode(int value, int weight, Node* head)
 {
     Node* newNode = new Node;
     
     newNode->val = value;
     newNode->cost = weight;
-
     // point new node to current head
     newNode->next = head;
 
@@ -22,7 +22,7 @@ Node* Graph::getAdjListNode(int value, int weight, Node* head)
 Graph::Graph(int edgeNum, int nodeNum, char graphType)  // constructor
 {
     // allocate memory
-    head = new Node*[nodeNum+1]();
+    head = new Node*[nodeNum]();
     this->nodeNum = nodeNum;
     this->graphType = graphType;
     //adj = new list<int,int>[nodeNum+1];
@@ -32,6 +32,7 @@ Graph::Graph(int edgeNum, int nodeNum, char graphType)  // constructor
         head[i] = nullptr;
     
 }
+
 
 void Graph::addEdge(Edge anEdge)
 {
@@ -54,12 +55,15 @@ void Graph::addEdge(Edge anEdge)
         newNode = getAdjListNode(src, weight, head[dest]);
         // change head pointer to point to the new node
         head[dest] = newNode;
-
-
         //adj[dest].insert(adj[dest].end(),{src,weight});
     }
 }
 
+void addEdge(vector<int> adj[], int u, int v) 
+{ 
+    adj[u].push_back(v); 
+    adj[v].push_back(u); 
+} 
 
 
 // Destructor
@@ -72,6 +76,8 @@ Graph::~Graph() {
 // print all neighboring vertices of given vertex
 void Graph::printList(int i, Node* ptr)
 {
+    //given i and G.head[i]
+
 	while (ptr != nullptr)
 	{   
 		cout << "(" << i << ", " << ptr->val
@@ -82,18 +88,36 @@ void Graph::printList(int i, Node* ptr)
 	cout << endl;
 }
 
+
+
+
 void Graph::DFS(){
-    int time = 0;
+    
     
     for(int i = 0; i < nodeNum; i++)
     {
-        cout << "i: " << head[i]->val<< endl;   // 這裡應該是要判斷頭有沒有走過（但頭是ptr怎麼辦）
-        if (head[i]->color == 'w'){
-            Node* u = 
-            DFS_visit(head[i], time);
-
+        //cout << "i: " << i << head[i]<< endl;   // 這裡應該是要判斷頭有沒有走過（但頭是ptr怎麼辦）
+        while(head[i] != nullptr){
+            head[i]-> color = 'w';
+            head[i]-> pi = nullptr;
+            head[i] = head[i]->next;
         }
     }
+
+    int time = 0;
+
+    for(int i = 0; i < nodeNum; i++)
+    {
+        cout << "i: " << i << head[i]->val<< endl;   // 這裡應該是要判斷頭有沒有走過（但頭是ptr怎麼辦）
+        while(head[i] != nullptr){
+
+            if (head[i]->color == 'w'){
+                DFS_visit(head[i], time);
+            }
+            head[i] = head[i]->next;
+        }
+    }
+
 
     
 }
@@ -103,26 +127,42 @@ void Graph::DFS(){
 void Graph::DFS_visit(Node* u, int& time)
 {
     //cout << "u" << u->val << ":";
+    time++;
+    u->d = time;
     u->color = 'g';
     Node* v = u->next;
     while(v != nullptr)
     {
         if(v->color == 'w')
         {
-            cout << v->val << " -> ";
+            //cout << v->val << " -> ";
             v->pi = u;
-            DFS_visit(v,time);
+            DFS_visit(v, time);
         }
         v = v->next;
     }
     u->color = 'b';
+    time++;
+    u->f = time; 
     cout << endl;
 
 }
 
 
-void Graph::PrimMST(int Start)
+void Graph::PrimMST(int start)
 {
-    for(int i = 0 ;i < nodeNum; i++)
-        cout << head[i][0].val << " ";
+   for(int i = 0;i < nodeNum; i++)
+   {
+      while(head[i] != nullptr)
+      {
+          head[i]->val = 9999;
+          head[i]->pi = nullptr;
+
+          head[i] = head[i]->next;
+      }
+
+   }
+
+
+
 }
