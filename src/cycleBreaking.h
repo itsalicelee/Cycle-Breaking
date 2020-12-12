@@ -1,6 +1,9 @@
 #include<list>
 #include<vector>
 #include<iostream>
+#include <cstdlib> 
+#include <iostream> 
+
 
 #ifndef _CYCLE_BREAKING_H
 #define _CYCLE_BREAKING_H
@@ -34,7 +37,7 @@ struct Edge {
 class Graph
 {
 private:
-	int nodeNum;	// number of nodes in the graph
+	
 	int edgeNum;
 	char graphType;
 	char_arr color;
@@ -42,6 +45,7 @@ private:
 	Node* getAdjListNode(int value, int weight, Node* head);
 
 public:
+	int nodeNum;	// number of nodes in the graph
 	Node** head;  // An array of pointers to Node to represent adjacency list
 	Graph(int nodeNum, char graphType);  // Constructor
 	Graph(int edgeNum, int nodeNum, char graphType);  // Constructor
@@ -58,4 +62,25 @@ public:
 
 };
 
+// data structure for fib heap
+struct node { 
+    node* parent; 
+    node* child; 
+    node* left; 
+    node* right; 
+    int key; 
+}; 
+
+
+class FibHeap
+{
+public:
+	FibHeap(int n);
+	~FibHeap();
+	struct node* mini;  // Creating min pointer as "mini" 
+	int no_of_nodes;  // Declare an integer for number of nodes in the heap 
+	void insertion(int val);  // Function to insert a node in heap 
+	void displayFib(struct node* mini);  // Function to display the heap
+	int find_min(struct node* mini);  // Function to find min node in the heap 
+};
 #endif

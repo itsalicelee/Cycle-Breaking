@@ -67,11 +67,11 @@ int main(int argc, char* argv[])
 
   
 
-    G.printGraph();
+    // G.printGraph();
     // G.DFS();
-    // G.printDFSTree();
-    G.printList(1);
-
+    // G.printDFS();
+    //G.printList(1);
+    G.PrimMST(0);
 
 
     //cout << G.isCycle();
