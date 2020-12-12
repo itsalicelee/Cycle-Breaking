@@ -43,6 +43,8 @@ int main(int argc, char* argv[])
     
     int start, end, weight;
     Graph G(edgeNum, nodeNum, graphType); // create a graph
+    Graph g(nodeNum,graphType);
+    
     Edge edges;
 
     for(size_t i = 0; i < edgeNum; ++i){

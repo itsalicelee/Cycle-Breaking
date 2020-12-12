@@ -1,5 +1,6 @@
 #include<iostream>
 #include<vector>
+#include<utility>
 #include"cycleBreaking.h"
 using namespace std;
 
@@ -21,13 +22,15 @@ Node* Graph::getAdjListNode(int value, int weight, Node* head)
 Graph::Graph(int edgeNum, int nodeNum, char graphType)  // constructor
 {
     // allocate memory
-    head = new Node*[nodeNum]();
+    head = new Node*[nodeNum+1]();
     this->nodeNum = nodeNum;
     this->graphType = graphType;
+    //adj = new list<int,int>[nodeNum+1];
 
     // initialize head pointer for all vertices
     for (int i = 0; i < nodeNum; ++i)
         head[i] = nullptr;
+    
 }
 
 void Graph::addEdge(Edge anEdge)
@@ -44,12 +47,16 @@ void Graph::addEdge(Edge anEdge)
     // point head pointer to new node
     head[src] = newNode;
     
-    
+    //adj[src].insert(adj[src].end(),{dest,weight});
+
     // for undirected graph
     if (this->graphType == 'u'){
         newNode = getAdjListNode(src, weight, head[dest]);
         // change head pointer to point to the new node
         head[dest] = newNode;
+
+
+        //adj[dest].insert(adj[dest].end(),{src,weight});
     }
 }
 
@@ -78,13 +85,16 @@ void Graph::printList(int i, Node* ptr)
 void Graph::DFS(){
     int time = 0;
     
-
     for(int i = 0; i < nodeNum; i++)
     {
         cout << "i: " << head[i]->val<< endl;   // 這裡應該是要判斷頭有沒有走過（但頭是ptr怎麼辦）
-        if (head[i]->color == 'w') 
+        if (head[i]->color == 'w'){
+            Node* u = 
             DFS_visit(head[i], time);
+
+        }
     }
+
     
 }
 
