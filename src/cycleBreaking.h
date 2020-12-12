@@ -6,8 +6,9 @@
 #define _CYCLE_BREAKING_H
 
 
-typedef						std::vector<int> short_arr;
+typedef						std::vector<int> int_arr;
 typedef						std::vector<char> char_arr;
+
 
 // Data structure to store Adjacency list nodes
 struct Node {
@@ -37,24 +38,21 @@ private:
 	int edgeNum;
 	char graphType;
 	char_arr color;
-	short_arr dtime, ftime, parent;
+	int_arr d, f, key, pi;
 	Node* getAdjListNode(int value, int weight, Node* head);
-	//void DFS_visit(Node* u, int& time);
 
 public:
 	Node** head;  // An array of pointers to Node to represent adjacency list
 	Graph(int nodeNum, char graphType);  // Constructor
 	Graph(int edgeNum, int nodeNum, char graphType);  // Constructor
 	~Graph();  // Destructor
-    void printList(int i, Node* ptr);
 	void printGraph();
-	void addEdge(Edge anEdge);
-	void addEdge(std::vector<int> adj[], int u, int v) ;
-	void adj(int v);
+	void printList(int i);  // print (start,end,weight) of a given vertix
 	void DFS_visit(int u, int& time);
-	void printDFSTree();
+	void printDFS();
 	void DFS();
 	void PrimMST(int start);
+	void initialize();
 	
 	//std::list<int, int> *adj;
 

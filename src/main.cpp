@@ -16,8 +16,6 @@
 using namespace std;
 
 
-
-
 void help_message() {cout << "usage: ./bin/cb inputs/<input file> outputs/<output file>" << "\n";}
 int main(int argc, char* argv[])
 {
@@ -70,9 +68,9 @@ int main(int argc, char* argv[])
   
 
     G.printGraph();
-    G.DFS();
-    //G.printDFSTree();
-    //G.PrimMST(0);
+    // G.DFS();
+    // G.printDFSTree();
+    G.printList(1);
 
 
 

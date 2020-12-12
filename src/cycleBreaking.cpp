@@ -4,19 +4,17 @@
 #include"cycleBreaking.h"
 using namespace std;
 
-
-
-Node* Graph::getAdjListNode(int value, int weight, Node* head)
+void Graph::initialize()  // initialize d, f, pi, color, array
 {
-    Node* newNode = new Node;
-    
-    newNode->key = value;
-    newNode->cost = weight;
-    // point new node to current head
-    newNode->next = head;
-
-    return newNode;
+    for(int i = 0; i < nodeNum; i++)
+    {
+        d[i] = 0;
+        f[i] = 0;
+        pi[i] = 0;
+        color[i] = 'w';
+    }
 }
+
 
 
 Graph::Graph(int edgeNum, int nodeNum, char graphType)  // constructor
@@ -30,9 +28,10 @@ Graph::Graph(int edgeNum, int nodeNum, char graphType)  // constructor
     // initialize head pointer for all vertices
     for (int i = 0; i < nodeNum; ++i){
         this->head[i] = nullptr;
-        parent.push_back(0);
-		dtime.push_back(0);
-		ftime.push_back(0);
+        pi.push_back(0);
+		d.push_back(0);
+		f.push_back(0);
+        pi.push_back(0);
 		color.push_back('w');
     }
     
@@ -55,11 +54,7 @@ void Graph::printGraph()
     }
 }
 
-void addEdge(vector<int> adj[], int u, int v) 
-{ 
-    adj[u].push_back(v); 
-    adj[v].push_back(u); 
-} 
+
 
 
 // Destructor
@@ -70,9 +65,10 @@ Graph::~Graph() {
 }
 
 // print all neighboring vertices of given vertex
-void Graph::printList(int i, Node* ptr)
+void Graph::printList(int i)
 {
     //given i and G.head[i]
+    Node* ptr = this->head[i];
 
 	while (ptr != nullptr)
 	{   
@@ -89,6 +85,8 @@ void Graph::printList(int i, Node* ptr)
 
 void Graph::DFS(){
     
+    this->initialize();
+
     int time = 0;
 
     for(int i = 0; i < nodeNum; ++i)
@@ -106,7 +104,7 @@ void Graph::DFS_visit(int u, int& time)
 {
     
     time++;
-    this->dtime[u] = time;
+    this->d[u] = time;
     this->color[u] = 'g';
 
     Node* v = head[u];
@@ -114,20 +112,20 @@ void Graph::DFS_visit(int u, int& time)
     {
         if(color[v->key] == 'w')
         {
-            parent[v->key]= u;
+            pi[v->key]= u;
             DFS_visit(v->key, time);
         }
         v = v->next;
     }
     this->color[u] = 'b';
     time++;
-    this->ftime[u] = time; 
+    this->f[u] = time; 
 
 }
 
-void Graph::printDFSTree(){
+void Graph::printDFS(){
 	for (int i = 0; i < nodeNum; ++i){
-		cout << i << ": " << dtime[i] << " " << ftime[i] << " " << color[i] << endl;
+		cout << i << ": " << d[i] << " " << f[i] << " " << endl;
 	}
 }
 
@@ -143,7 +141,4 @@ void Graph::PrimMST(int start)
       }
 
    }
-
-
-
 }
