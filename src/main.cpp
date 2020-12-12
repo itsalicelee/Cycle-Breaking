@@ -8,6 +8,7 @@
 #include<iostream>
 #include<fstream>
 #include<utility>
+#include<vector>
 #include<list>
 #include<stdlib.h>
 #include<stdio.h>
@@ -44,23 +45,33 @@ int main(int argc, char* argv[])
     int start, end, weight;
     Graph G(edgeNum, nodeNum, graphType); // create a graph
     //Graph g(nodeNum,graphType);
-    
-    Edge edges;
+
 
     for(size_t i = 0; i < edgeNum; ++i){
         fin >> start >> end >> weight;
-    edges.src = start;
-    edges.dest = end;
-    edges.weight = weight;
-    G.addEdge(edges);
+        Node* v = new Node();
+    	v->key = end;
+    	v->cost = weight;
+    	v->next = G.head[start];
+    	G.head[start] = v;
+
+        if(graphType == 'u')
+        {
+            Node* u = new Node;
+            u->key = start;
+            u->cost = weight;
+            u->next = G.head[end];
+            G.head[end] = u;
+        }
     }
     
-    // print adjacency list representation of graph
-    for (int i = 0; i < nodeNum; i++)
-    {  
-        G.printList(i, G.head[i]);  // print all neighboring vertices of vertex i
-    }
+
+
+  
+
+    G.printGraph();
     G.DFS();
+    //G.printDFSTree();
     //G.PrimMST(0);
 
 

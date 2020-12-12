@@ -10,7 +10,7 @@ Node* Graph::getAdjListNode(int value, int weight, Node* head)
 {
     Node* newNode = new Node;
     
-    newNode->val = value;
+    newNode->key = value;
     newNode->cost = weight;
     // point new node to current head
     newNode->next = head;
@@ -22,40 +22,36 @@ Node* Graph::getAdjListNode(int value, int weight, Node* head)
 Graph::Graph(int edgeNum, int nodeNum, char graphType)  // constructor
 {
     // allocate memory
-    head = new Node*[nodeNum]();
+    head = new Node*[nodeNum];
     this->nodeNum = nodeNum;
     this->graphType = graphType;
-    //adj = new list<int,int>[nodeNum+1];
+    
 
     // initialize head pointer for all vertices
-    for (int i = 0; i < nodeNum; ++i)
-        head[i] = nullptr;
+    for (int i = 0; i < nodeNum; ++i){
+        this->head[i] = nullptr;
+        parent.push_back(0);
+		dtime.push_back(0);
+		ftime.push_back(0);
+		color.push_back('w');
+    }
     
 }
 
 
-void Graph::addEdge(Edge anEdge)
+void Graph::printGraph()
 {
-    // add edges to the directed graph
-
-    int src = anEdge.src;
-    int dest = anEdge.dest;
-    int weight = anEdge.weight;
-
-    // insert in the beginning
-    Node* newNode = getAdjListNode(dest, weight, head[src]);
-
-    // point head pointer to new node
-    head[src] = newNode;
-    
-    //adj[src].insert(adj[src].end(),{dest,weight});
-
-    // for undirected graph
-    if (this->graphType == 'u'){
-        newNode = getAdjListNode(src, weight, head[dest]);
-        // change head pointer to point to the new node
-        head[dest] = newNode;
-        //adj[dest].insert(adj[dest].end(),{src,weight});
+    // print adjacency list representation of graph
+    for (int i = 0; i < nodeNum; ++i)
+    {  
+        cout << i << ":";
+        Node* a = head[i];
+        while(a != nullptr)
+        {
+            cout << a->key << " ";
+            a = a ->next;
+        }
+        cout << endl;
     }
 }
 
@@ -80,7 +76,7 @@ void Graph::printList(int i, Node* ptr)
 
 	while (ptr != nullptr)
 	{   
-		cout << "(" << i << ", " << ptr->val
+		cout << "(" << i << ", " << ptr->key
 			<< ", " << ptr->cost << ") ";
 
 		ptr = ptr->next;
@@ -93,61 +89,47 @@ void Graph::printList(int i, Node* ptr)
 
 void Graph::DFS(){
     
-    
-    for(int i = 0; i < nodeNum; i++)
-    {
-        //cout << "i: " << i << head[i]<< endl;   // 這裡應該是要判斷頭有沒有走過（但頭是ptr怎麼辦）
-        while(head[i] != nullptr){
-            head[i]-> color = 'w';
-            head[i]-> pi = nullptr;
-            head[i] = head[i]->next;
-        }
-    }
-
     int time = 0;
 
-    for(int i = 0; i < nodeNum; i++)
+    for(int i = 0; i < nodeNum; ++i)
     {
-        cout << "i: " << i << head[i]->val<< endl;   // 這裡應該是要判斷頭有沒有走過（但頭是ptr怎麼辦）
-        while(head[i] != nullptr){
-
-            if (head[i]->color == 'w'){
-                DFS_visit(head[i], time);
-            }
-            head[i] = head[i]->next;
+        //cout << "i: " << i  << head[i]->val << " "<< head[i]->color << endl;   // 這裡應該是要判斷頭有沒有走過（但頭是ptr怎麼辦）
+        if (color[i] == 'w'){
+            DFS_visit(i, time);
         }
     }
-
-
-    
 }
 
 
 
-void Graph::DFS_visit(Node* u, int& time)
+void Graph::DFS_visit(int u, int& time)
 {
-    //cout << "u" << u->val << ":";
+    
     time++;
-    u->d = time;
-    u->color = 'g';
-    Node* v = u->next;
+    this->dtime[u] = time;
+    this->color[u] = 'g';
+
+    Node* v = head[u];
     while(v != nullptr)
     {
-        if(v->color == 'w')
+        if(color[v->key] == 'w')
         {
-            //cout << v->val << " -> ";
-            v->pi = u;
-            DFS_visit(v, time);
+            parent[v->key]= u;
+            DFS_visit(v->key, time);
         }
         v = v->next;
     }
-    u->color = 'b';
+    this->color[u] = 'b';
     time++;
-    u->f = time; 
-    cout << endl;
+    this->ftime[u] = time; 
 
 }
 
+void Graph::printDFSTree(){
+	for (int i = 0; i < nodeNum; ++i){
+		cout << i << ": " << dtime[i] << " " << ftime[i] << " " << color[i] << endl;
+	}
+}
 
 void Graph::PrimMST(int start)
 {
@@ -155,9 +137,8 @@ void Graph::PrimMST(int start)
    {
       while(head[i] != nullptr)
       {
-          head[i]->val = 9999;
+          head[i]->key = 9999;
           head[i]->pi = nullptr;
-
           head[i] = head[i]->next;
       }
 
