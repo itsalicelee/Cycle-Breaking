@@ -145,20 +145,22 @@ void Graph::PrimMST(int start)
 {
     this->initialize();
     this->key[start] = 0;
+    this->pi[start] = -1;
+    // int *parent = new int[nodeNum];
+    // bool *visited = new bool[nodeNum];
+    // int *weight = new int[nodeNum];
+    // for(int i=0; i<nodeNum; i++)
+    // {
+    //     visited[i] = false;
+    //     weight[i] = MAX_WEIGHT;
+    // }
+    // parent[0] = -1;
+    // weight[0] = 0;
+    
 
-    int *parent = new int[nodeNum];
-    bool *visited = new bool[nodeNum];
-    int *weight = new int[nodeNum];
-    for(int i=0; i<nodeNum; i++)
-    {
-        visited[i] = false;
-        weight[i] = MAX_WEIGHT;
-    }
-    parent[0] = -1;
-    weight[0] = 0;
     for (int i = 0; i < nodeNum; ++i){
 
-        int minVertex = ExtractMin(visited, weight, nodeNum);
+        int minVertex = ExtractMin(this->visited, this->key);
         visited[minVertex] = true;
         Node* v = head[minVertex];
 
@@ -173,49 +175,6 @@ void Graph::PrimMST(int start)
         }
     }
     
-//////////////////////////////////////////////////
-// create queue
-    // PriorityQueue Q;
-    
-    // for(int i = 0; i < nodeNum; i++)
-    //     Q.push(i);
-    
-    // Test queue
-    // Q.printQueue();
-    // Q.pop();
-    // Q.printQueue();
-    // Q.pop();m
-    // Q.printQueue();
-    // bool b = Q.inQueue(3);
-    //TODO: something like Q.push(make_pair(head[i]->nodeKey,head[i]->cost))
-    
-    /* ver1.0
-    cout << "size" << Q.size() << endl;
-    while(Q.size() != 0)
-    {
-        int u = Q.top();  // Q is the lightest key! not the nodeKey
-        Q.pop();
-        Node* v = head[u];
-        
-        cout << "u" << u << endl;
-        
-        //TODO
-        while(v != nullptr)
-        {
-            if(Q.inQueue(v->nodeKey) && v->cost < key[v->nodeKey]) // how to  find w(u,v) 
-            {   
-                cout << "choose " << v->nodeKey << endl;
-                cout << "w(u,v): "<< v->cost << endl;
-                pi[v->nodeKey] = u;
-                key[v->nodeKey] = v->cost;
-            }
-            v = v ->next;
-            this->printPrim();
-        }
-        
-    }
-///////////////////////////////////////////////
-    ver1.0 end*/ 
 }
 
 void PriorityQueue::heapify_down(int i)
@@ -335,7 +294,7 @@ void Graph::printPrim()
 }
 
 
-int Graph::ExtractMin(bool *visited, int *weight, int nodeNum)
+int Graph::ExtractMin(bool_arr visited, int_arr weight)
 {
     int minVertex = -1;
     for(int i = 0; i < nodeNum; ++i)
