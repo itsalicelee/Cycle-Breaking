@@ -67,11 +67,11 @@ int main(int argc, char* argv[])
 
   
 
-    G.printGraph();
-    cout << "=========" << endl;
-    //G.DFS();
-    //G.printDFS();
-    //G.printList(1);
+    // G.printGraph();
+    
+    G.DFS();
+    G.printDFS();
+    G.printList(1);
     G.PrimMST(0);
     G.printPrim();
 

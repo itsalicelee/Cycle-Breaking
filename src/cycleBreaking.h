@@ -11,6 +11,7 @@
 
 typedef						std::vector<int> int_arr;
 typedef						std::vector<char> char_arr;
+typedef 					std::vector<bool> bool_arr;
 
 const int MAX_WEIGHT = 999;
 // Data structure to store Adjacency list nodes
@@ -42,6 +43,7 @@ private:
 	char graphType;
 	char_arr color;
 	int_arr d, f, key, pi;
+	bool_arr visited;
 	Node* getAdjListNode(int value, int weight, Node* head);
 
 public:
@@ -56,6 +58,7 @@ public:
 	void printDFS();
 	void DFS();
 	void PrimMST(int start);
+	int  ExtractMin(bool *visited, int *weight, int nodes);
 	void printPrim();
 	void initialize();
 	
@@ -90,4 +93,9 @@ public:
 	bool inQueue(int n);
 	void printQueue();
 };
+
+
+
+
+
 #endif

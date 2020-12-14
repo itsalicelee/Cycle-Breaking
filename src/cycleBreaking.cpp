@@ -3,6 +3,7 @@
 #include<vector>
 #include<utility>
 #include<stdlib.h>
+#include<set>
 #include"cycleBreaking.h"
 using namespace std;
 
@@ -15,6 +16,7 @@ void Graph::initialize()  // initialize d, f, pi, color, array
         pi[i] = -1;
         color[i] = 'w';
         key[i] = MAX_WEIGHT;
+        visited[i] = false;
     }
 }
 
@@ -37,6 +39,7 @@ Graph::Graph(int edgeNum, int nodeNum, char graphType)  // constructor
         pi.push_back(0);
 		color.push_back('w');
         key.push_back(0);
+        visited.push_back(false);
     }
     
 }
@@ -44,6 +47,7 @@ Graph::Graph(int edgeNum, int nodeNum, char graphType)  // constructor
 
 void Graph::printGraph()
 {
+    cout << "========= Graph =========" << endl;
     // print adjacency list representation of graph
     for (int i = 0; i < nodeNum; ++i)
     {  
@@ -58,9 +62,6 @@ void Graph::printGraph()
     }
 }
 
-
-
-
 // Destructor
 Graph::~Graph() {
     for (int i = 0; i < nodeNum; i++)
@@ -71,17 +72,21 @@ Graph::~Graph() {
 // print all neighboring vertices of given vertex
 void Graph::printList(int i)
 {
+    cout << "========= (Node i, Neighbor, Cost) of node i =========" << endl;
+    cout << "i is:" << i << endl;
     //given i and G.head[i]
     Node* ptr = this->head[i];
-
+    
 	while (ptr != nullptr)
 	{   
 		cout << "(" << i << ", " << ptr->nodeKey
 			<< ", " << ptr->cost << ") ";
 
 		ptr = ptr->next;
+
 	}
-	cout << endl;
+    cout << endl;
+    cout << endl;
 }
 
 
@@ -129,9 +134,11 @@ void Graph::DFS_visit(int u, int& time)
 
 void Graph::printDFS()
 {
+    cout << "========= DFS =========" << endl;
 	for (int i = 0; i < nodeNum; ++i){
 		cout << i << ": " <<  "discover time: " << d[i] << ", finish time: " << f[i] << " " << endl;
 	}
+    cout << endl;
 }
 
 void Graph::PrimMST(int start)
@@ -139,19 +146,50 @@ void Graph::PrimMST(int start)
     this->initialize();
     this->key[start] = 0;
 
-    // create queue
-    PriorityQueue Q;
-    for(int i = 0; i < nodeNum; i++)
-        Q.push(i);
+    int *parent = new int[nodeNum];
+    bool *visited = new bool[nodeNum];
+    int *weight = new int[nodeNum];
+    for(int i=0; i<nodeNum; i++)
+    {
+        visited[i] = false;
+        weight[i] = MAX_WEIGHT;
+    }
+    parent[0] = -1;
+    weight[0] = 0;
+    for (int i = 0; i < nodeNum; ++i){
 
+        int minVertex = ExtractMin(visited, weight, nodeNum);
+        visited[minVertex] = true;
+        Node* v = head[minVertex];
+
+        while(v != nullptr)
+        {
+            if(!visited[v->nodeKey] && v->cost < key[v->nodeKey])
+            {   
+                pi[v->nodeKey] = minVertex;
+                key[v->nodeKey] = v->cost;
+            }
+            v = v ->next;
+        }
+    }
+    
+//////////////////////////////////////////////////
+// create queue
+    // PriorityQueue Q;
+    
+    // for(int i = 0; i < nodeNum; i++)
+    //     Q.push(i);
+    
     // Test queue
     // Q.printQueue();
     // Q.pop();
     // Q.printQueue();
-    // Q.pop();
+    // Q.pop();m
     // Q.printQueue();
     // bool b = Q.inQueue(3);
-
+    //TODO: something like Q.push(make_pair(head[i]->nodeKey,head[i]->cost))
+    
+    /* ver1.0
     cout << "size" << Q.size() << endl;
     while(Q.size() != 0)
     {
@@ -176,6 +214,8 @@ void Graph::PrimMST(int start)
         }
         
     }
+///////////////////////////////////////////////
+    ver1.0 end*/ 
 }
 
 void PriorityQueue::heapify_down(int i)
@@ -284,7 +324,26 @@ void PriorityQueue::printQueue()
 
 void Graph::printPrim()
 {
+    cout << "========= Prim's Algorithm =========" << endl;
+    int totalCost = 0;
 	for (int i = 0; i < nodeNum; ++i){
 		cout << i << ": " <<  "pi: " << pi[i] << ",   key: " << key[i] << " " << endl;
+        totalCost += key[i];
 	}
+    cout << "Total cost is: " << totalCost << endl;
+    cout << endl;
+}
+
+
+int Graph::ExtractMin(bool *visited, int *weight, int nodeNum)
+{
+    int minVertex = -1;
+    for(int i = 0; i < nodeNum; ++i)
+    {
+        if (!visited[i] && (minVertex == -1 || key[i] < key[minVertex]))
+        {
+            minVertex = i;
+        }
+    }
+    return minVertex;
 }
