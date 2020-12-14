@@ -58,7 +58,7 @@ public:
 	void printDFS();
 	void DFS();
 	void PrimMST(int start);
-	int  ExtractMin(bool_arr visited, int_arr weight);
+	int  ExtractMax(bool_arr visited, int_arr weight);
 	void printPrim();
 	void initialize();
 	

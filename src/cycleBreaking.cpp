@@ -15,7 +15,7 @@ void Graph::initialize()  // initialize d, f, pi, color, array
         f[i] = 0;
         pi[i] = -1;
         color[i] = 'w';
-        key[i] = MAX_WEIGHT;
+        key[i] = -MAX_WEIGHT;
         visited[i] = false;
     }
 }
@@ -143,122 +143,21 @@ void Graph::PrimMST(int start)
 
     for (int i = 0; i < nodeNum; ++i)
     {
-        int minVertex = ExtractMin(this->visited, this->key);
-        visited[minVertex] = true;
-        Node* v = head[minVertex];
+        int maxVertex = ExtractMax(this->visited, this->key);
+        visited[maxVertex] = true;
+        Node* v = head[maxVertex];
 
         while(v != nullptr)
         {
-            if(!visited[v->nodeKey] && v->cost < key[v->nodeKey])
+            if(!visited[v->nodeKey] && v->cost > key[v->nodeKey])
             {   
-                pi[v->nodeKey] = minVertex;
+                pi[v->nodeKey] = maxVertex;
                 key[v->nodeKey] = v->cost;
             }
             v = v ->next;
         }
     }
     
-}
-
-void PriorityQueue::heapify_down(int i)
-{
-    // get left and right child of node at index i
-    int left = LEFT(i);
-    int right = RIGHT(i);
-
-    int smallest = i;
-
-    // compare A[i] with its left and right child
-    // and find smallest value
-    if (left < size() && A[left] < A[i])
-        smallest = left;
-
-    if (right < size() && A[right] < A[smallest])
-        smallest = right;
-
-    // swap with child having lesser value and 
-    // call heapify-down on the child
-    if (smallest != i) {
-        swap(A[i], A[smallest]);
-        heapify_down(smallest);
-    }
-}
-
-void PriorityQueue::heapify_up(int i)
-{
-    // check if node at index i and its parent violates 
-    // the heap property
-    if (i && A[PARENT(i)] > A[i]) 
-    {
-        // swap the two if heap property is violated
-        swap(A[i], A[PARENT(i)]);
-        // call Heapify-up on the parent
-        heapify_up(PARENT(i));
-    }
-}
-
-void PriorityQueue::push(int key)
-{
-    // insert the new element to the end of the vector
-    A.push_back(key);
-    // get element index and call heapify-up procedure
-    int index = size() - 1;
-    heapify_up(index);
-}
-
-void PriorityQueue::pop()
-    {
-        try {
-            // if heap has no elements, throw an exception
-            if (size() == 0)
-                throw out_of_range("Vector<X>::at() : "
-                        "index is out of range(Heap underflow)");
- 
-            // replace the root of the heap with the last element
-            // of the vector
-            A[0] = A.back();
-            A.pop_back();
- 
-            // call heapify-down on root node
-            heapify_down(0);
-        }
-        // catch and print the exception
-        catch (const out_of_range& oor) {
-            cout << "\n" << oor.what();
-        }
-}
-
-int PriorityQueue::top()
-{
-    try {
-        // if heap has no elements, throw an exception
-        if (size() == 0)
-            throw out_of_range("Vector<X>::at() : "
-                    "index is out of range(Heap underflow)");
-
-        // else return the top (first) element
-        return A.at(0);    // or return A[0];
-    }
-    // catch and print the exception
-    catch (const out_of_range& oor) {
-        cout << "\n" << oor.what();
-    }
-}
-bool PriorityQueue::inQueue(int n)
-{   
-    for(int i =0; i < A.size(); i++)
-    {
-        if (n == A[i])
-            return true;
-    }
-    return false;
-}
-
-void PriorityQueue::printQueue()
-{
-    for(int i = 0; i < A.size(); i++)
-        cout << A[i] << " ";
-    cout << endl;
 }
 
 void Graph::printPrim()
@@ -274,12 +173,12 @@ void Graph::printPrim()
 }
 
 
-int Graph::ExtractMin(bool_arr visited, int_arr weight)
+int Graph::ExtractMax(bool_arr visited, int_arr weight)
 {
     // function which is used in PrimMST
     int minVertex = -1;
     for(int i = 0; i < nodeNum; ++i){
-        if (!visited[i] && (minVertex == -1 || key[i] < key[minVertex])){
+        if (!visited[i] && (minVertex == -1 || key[i] > key[minVertex])){
             minVertex = i;
         }
     }
