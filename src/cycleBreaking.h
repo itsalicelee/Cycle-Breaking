@@ -12,12 +12,12 @@
 typedef						std::vector<int> int_arr;
 typedef						std::vector<char> char_arr;
 
-
+const int MAX_WEIGHT = 999;
 // Data structure to store Adjacency list nodes
 struct Node {
-	int key, cost;
+	int nodeKey, cost;
 	Node* root;
-	Node* pi = nullptr;
+	//Node* pi = nullptr;
 	Node* next;
 	char color = 'w';
 	int d = 0;  // for DFS
@@ -56,31 +56,38 @@ public:
 	void printDFS();
 	void DFS();
 	void PrimMST(int start);
+	void printPrim();
 	void initialize();
 	
 	//std::list<int, int> *adj;
 
 };
 
-// data structure for fib heap
-struct node { 
-    node* parent; 
-    node* child; 
-    node* left; 
-    node* right; 
-    int key; 
-}; 
 
 
-class FibHeap
+// Data structure for Min Heap
+struct PriorityQueue 
 {
+private:
+    // vector to store heap elements
+    std::vector<int> A;
+    int PARENT(int i) { return (i - 1) / 2; }  // don't call this function if i is already a root
+    int LEFT(int i) { return (2 * i + 1); }  // return left child of A[i]    
+    int RIGHT(int i) { return (2 * i + 2);}  // return right child of A[i] 
+ 
+    // Recursive Heapify-down algorithm
+    // the node at index i and its two direct children
+    void heapify_down(int i);  // violates the heap property
+
+    void heapify_up(int i);  // Recursive Heapify-up algorithm
+    
 public:
-	FibHeap(int n);
-	~FibHeap();
-	struct node* mini;  // Creating min pointer as "mini" 
-	int no_of_nodes;  // Declare an integer for number of nodes in the heap 
-	void insertion(int val);  // Function to insert a node in heap 
-	void displayFib(struct node* mini);  // Function to display the heap
-	int find_min(struct node* mini);  // Function to find min node in the heap 
+    unsigned int size(){return A.size();}  // return size of the heap
+    bool empty(){return size() == 0;}  // function to check if heap is empty or not
+    void push(int key);  // insert key into the heap
+    void pop();  // function to remove element with lowest priority (present at root)
+    int top();  // function to return element with lowest priority (present at root)
+	bool inQueue(int n);
+	void printQueue();
 };
 #endif

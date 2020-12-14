@@ -12,8 +12,9 @@ void Graph::initialize()  // initialize d, f, pi, color, array
     {
         d[i] = 0;
         f[i] = 0;
-        pi[i] = 0;
+        pi[i] = -1;
         color[i] = 'w';
+        key[i] = MAX_WEIGHT;
     }
 }
 
@@ -35,7 +36,7 @@ Graph::Graph(int edgeNum, int nodeNum, char graphType)  // constructor
 		f.push_back(0);
         pi.push_back(0);
 		color.push_back('w');
-        key.push_back(999);
+        key.push_back(0);
     }
     
 }
@@ -46,11 +47,11 @@ void Graph::printGraph()
     // print adjacency list representation of graph
     for (int i = 0; i < nodeNum; ++i)
     {  
-        cout << i << ":";
+        cout << "head" << i << ":" << endl;
         Node* a = head[i];
         while(a != nullptr)
         {
-            cout << a->key << " ";
+            cout << "("<<a->nodeKey << "," << a->cost  << ")"<< endl;
             a = a ->next;
         }
         cout << endl;
@@ -75,7 +76,7 @@ void Graph::printList(int i)
 
 	while (ptr != nullptr)
 	{   
-		cout << "(" << i << ", " << ptr->key
+		cout << "(" << i << ", " << ptr->nodeKey
 			<< ", " << ptr->cost << ") ";
 
 		ptr = ptr->next;
@@ -113,10 +114,10 @@ void Graph::DFS_visit(int u, int& time)
     Node* v = head[u];
     while(v != nullptr)
     {
-        if(color[v->key] == 'w')
+        if(color[v->nodeKey] == 'w')
         {
-            pi[v->key]= u;
-            DFS_visit(v->key, time);
+            pi[v->nodeKey]= u;
+            DFS_visit(v->nodeKey, time);
         }
         v = v->next;
     }
@@ -126,7 +127,8 @@ void Graph::DFS_visit(int u, int& time)
 
 }
 
-void Graph::printDFS(){
+void Graph::printDFS()
+{
 	for (int i = 0; i < nodeNum; ++i){
 		cout << i << ": " <<  "discover time: " << d[i] << ", finish time: " << f[i] << " " << endl;
 	}
@@ -136,91 +138,153 @@ void Graph::PrimMST(int start)
 {
     this->initialize();
     this->key[start] = 0;
-    int n = this->nodeNum;
 
     // create queue
-    FibHeap Q(n);
+    PriorityQueue Q;
     for(int i = 0; i < nodeNum; i++)
-    {
-        Q.insertion(i);
-    }
+        Q.push(i);
 
+    // Test queue
+    // Q.printQueue();
+    // Q.pop();
+    // Q.printQueue();
+    // Q.pop();
+    // Q.printQueue();
+    // bool b = Q.inQueue(3);
 
-    while(Q.no_of_nodes != 0)
+    cout << "size" << Q.size() << endl;
+    while(Q.size() != 0)
     {
-        int u = Q.find_min(Q.mini);
-        for(int i = 0; i < nodeNum; i++)
+        int u = Q.top();  // Q is the lightest key! not the nodeKey
+        Q.pop();
+        Node* v = head[u];
+        
+        cout << "u" << u << endl;
+        
+        //TODO
+        while(v != nullptr)
         {
-            Node* a = head[i];
-            while(a != nullptr)
-            {
-                //TODO
-
-
-
-
+            if(Q.inQueue(v->nodeKey) && v->cost < key[v->nodeKey]) // how to  find w(u,v) 
+            {   
+                cout << "choose " << v->nodeKey << endl;
+                cout << "w(u,v): "<< v->cost << endl;
+                pi[v->nodeKey] = u;
+                key[v->nodeKey] = v->cost;
             }
-
-
+            v = v ->next;
+            this->printPrim();
         }
-
+        
     }
 }
 
-FibHeap::FibHeap(int n)
+void PriorityQueue::heapify_down(int i)
 {
-    this->no_of_nodes = n;
-    struct node* mini = NULL;
+        // get left and right child of node at index i
+        int left = LEFT(i);
+        int right = RIGHT(i);
+ 
+        int smallest = i;
+ 
+        // compare A[i] with its left and right child
+        // and find smallest value
+        if (left < size() && A[left] < A[i])
+            smallest = left;
+ 
+        if (right < size() && A[right] < A[smallest])
+            smallest = right;
+ 
+        // swap with child having lesser value and 
+        // call heapify-down on the child
+        if (smallest != i) {
+            swap(A[i], A[smallest]);
+            heapify_down(smallest);
+        }
 }
-FibHeap::~FibHeap()
+
+void PriorityQueue::heapify_up(int i)
 {
-    delete[] this->mini;
-};
+    // check if node at index i and its parent violates 
+    // the heap property
+    if (i && A[PARENT(i)] > A[i]) 
+    {
+        // swap the two if heap property is violated
+        swap(A[i], A[PARENT(i)]);
+        
+        // call Heapify-up on the parent
+        heapify_up(PARENT(i));
+    }
+}
 
-void FibHeap::insertion(int val) 
-{ 
-    struct node* new_node = (struct node*)malloc(sizeof(struct node)); 
-    new_node->key = val; 
-    new_node->parent = NULL; 
-    new_node->child = NULL; 
-    new_node->left = new_node; 
-    new_node->right = new_node; 
-    if (this->mini != NULL) { 
-        (this->mini->left)->right = new_node; 
-        new_node->right = mini; 
-        new_node->left = mini->left; 
-        this->mini->left = new_node; 
-        if (new_node->key < mini->key) 
-            this->mini = new_node; 
-    } 
-    else { 
-        this->mini = new_node; 
-    } 
-} 
+void PriorityQueue::push(int key)
+{
+        // insert the new element to the end of the vector
+        A.push_back(key);
+ 
+        // get element index and call heapify-up procedure
+        int index = size() - 1;
+        heapify_up(index);
+}
 
-void FibHeap::displayFib(struct node* mini) 
-{ 
-    node* ptr = this->mini; 
-    if (ptr == NULL) 
-        cout << "The Heap is Empty" << endl; 
-  
-    else { 
-        cout << "The root nodes of Heap are: " << endl; 
-        do { 
-            cout << ptr->key; 
-            ptr = ptr->right; 
-            if (ptr != mini) { 
-                cout << "-->"; 
-            } 
-        } while (ptr != this->mini && ptr->right != NULL); 
-        cout << endl 
-             << "The heap has " << this->no_of_nodes << " nodes" << endl; 
-    } 
-} 
+void PriorityQueue::pop()
+    {
+        try {
+            // if heap has no elements, throw an exception
+            if (size() == 0)
+                throw out_of_range("Vector<X>::at() : "
+                        "index is out of range(Heap underflow)");
+ 
+            // replace the root of the heap with the last element
+            // of the vector
+            A[0] = A.back();
+            A.pop_back();
+ 
+            // call heapify-down on root node
+            heapify_down(0);
+        }
+        // catch and print the exception
+        catch (const out_of_range& oor) {
+            cout << "\n" << oor.what();
+        }
+}
 
-// Function to find min node in the heap 
-int FibHeap::find_min(struct node* mini) 
-{ 
-    cout << "min of heap is: " << this->mini->key << endl; 
-    return this->mini->key;
-} 
+int PriorityQueue::top()
+{
+    try {
+        // if heap has no elements, throw an exception
+        if (size() == 0)
+            throw out_of_range("Vector<X>::at() : "
+                    "index is out of range(Heap underflow)");
+
+        // else return the top (first) element
+        return A.at(0);    // or return A[0];
+    }
+    // catch and print the exception
+    catch (const out_of_range& oor) {
+        cout << "\n" << oor.what();
+    }
+}
+bool PriorityQueue::inQueue(int n)
+{   
+    // better way??
+    for(int i =0; i < A.size(); i++)
+    {
+        if (n == A[i])
+            return true;
+    }
+    return false;
+}
+
+void PriorityQueue::printQueue()
+{
+    for(int i = 0; i < A.size(); i++)
+        cout << A[i] << " ";
+    cout << endl;
+}
+
+void Graph::printPrim()
+{
+	for (int i = 0; i < nodeNum; ++i){
+		cout << i << ": " <<  "pi: " << pi[i] << ",   key: " << key[i] << " " << endl;
+	}
+}

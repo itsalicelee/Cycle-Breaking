@@ -48,7 +48,7 @@ int main(int argc, char* argv[])
     for(size_t i = 0; i < edgeNum; ++i){
         fin >> start >> end >> weight;
         Node* v = new Node();
-    	v->key = end;
+    	v->nodeKey = end;
     	v->cost = weight;
     	v->next = G.head[start];
     	G.head[start] = v;
@@ -56,7 +56,7 @@ int main(int argc, char* argv[])
         if(graphType == 'u')
         {
             Node* u = new Node;
-            u->key = start;
+            u->nodeKey = start;
             u->cost = weight;
             u->next = G.head[end];
             G.head[end] = u;
@@ -67,11 +67,13 @@ int main(int argc, char* argv[])
 
   
 
-    // G.printGraph();
-    // G.DFS();
-    // G.printDFS();
+    G.printGraph();
+    cout << "=========" << endl;
+    //G.DFS();
+    //G.printDFS();
     //G.printList(1);
     G.PrimMST(0);
+    G.printPrim();
 
 
     //cout << G.isCycle();
