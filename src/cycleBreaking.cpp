@@ -15,7 +15,7 @@ void Graph::initialize()  // initialize d, f, pi, color, array
         f[i] = 0;
         pi[i] = -1;
         color[i] = 'w';
-        key[i] = -MAX_WEIGHT;
+        weight[i] = -MAX_WEIGHT;
         visited[i] = false;
     }
 }
@@ -36,7 +36,7 @@ Graph::Graph(int edgeNum, int nodeNum, char graphType)  // constructor
 		f.push_back(0);
         pi.push_back(0);
 		color.push_back('w');
-        key.push_back(0);
+        weight.push_back(0);
         visited.push_back(false);
     }
     
@@ -138,21 +138,21 @@ void Graph::printDFS()
 void Graph::PrimMST(int start)
 {
     this->initialize();  // initialize all arrays
-    this->key[start] = 0;
-    this->pi[start] = -1;
+    this->weight[start] = 0;
+    this->pi[start] = -MAX_WEIGHT;
 
     for (int i = 0; i < nodeNum; ++i)
     {
-        int maxVertex = ExtractMax(this->visited, this->key);
+        int maxVertex = ExtractMax(this->visited, this->weight);
         visited[maxVertex] = true;
         Node* v = head[maxVertex];
 
         while(v != nullptr)
         {
-            if(!visited[v->nodeKey] && v->cost > key[v->nodeKey])
+            if(!visited[v->nodeKey] && v->cost > weight[v->nodeKey])
             {   
                 pi[v->nodeKey] = maxVertex;
-                key[v->nodeKey] = v->cost;
+                weight[v->nodeKey] = v->cost;
             }
             v = v ->next;
         }
@@ -165,8 +165,9 @@ void Graph::printPrim()
     cout << "========= Prim's Algorithm =========" << endl;
     int totalCost = 0;
 	for (int i = 0; i < nodeNum; ++i){
-		cout << i << ": " <<  "pi: " << pi[i] << ",   key: " << key[i] << " " << endl;
-        totalCost += key[i];
+		cout <<  "i: " << i << ": " <<  "pi: " << pi[i] << ",   weight: " << weight[i] << " " << endl;
+        totalCost += weight[i];
+
 	}
     cout << "Total cost is: " << totalCost << endl;
     cout << endl;
@@ -178,9 +179,38 @@ int Graph::ExtractMax(bool_arr visited, int_arr weight)
     // function which is used in PrimMST
     int minVertex = -1;
     for(int i = 0; i < nodeNum; ++i){
-        if (!visited[i] && (minVertex == -1 || key[i] > key[minVertex])){
+        if (!visited[i] && (minVertex == -1 || weight[i] > weight[minVertex])){
             minVertex = i;
         }
     }
     return minVertex;
+}
+
+void Graph::printRemoveEdge()
+{
+    
+    // initially, we add new edges undirected a->b, b->a
+    // now we only need to add those is in the input to remove 
+    
+    for(int i = 0; i < nodeNum; i++)
+    {
+        Node* a = this->head[i];
+        bool remove = false;
+        while(a!=  nullptr)
+        {    
+            // undirected
+            if (!( pi[i] == a->nodeKey  &&  weight[i] == a->cost) ) 
+                this->removeNode.push_back(std::make_pair(i,a));
+            a = a->next;
+        }
+
+
+
+    }   
+    
+    
+    
+    cout << "Remove edges: (start,end,cost)" << endl;
+    for(int i = 0 ; i < removeNode.size(); ++i)
+        cout << removeNode[i].first << " " << removeNode[i].second->nodeKey << " " << removeNode[i].second->cost << endl;
 }

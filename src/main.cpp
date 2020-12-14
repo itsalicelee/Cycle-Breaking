@@ -43,8 +43,8 @@ int main(int argc, char* argv[])
     int start, end, weight;
     Graph G(edgeNum, nodeNum, graphType); // create a graph
     //Graph g(nodeNum,graphType);
-
-
+    vector<Edge> edges;
+    Edge anEdge;
     for(size_t i = 0; i < edgeNum; ++i){
         fin >> start >> end >> weight;
         Node* v = new Node();
@@ -52,6 +52,10 @@ int main(int argc, char* argv[])
     	v->cost = weight;
     	v->next = G.head[start];
     	G.head[start] = v;
+        anEdge.src = start;
+        anEdge.dest = end;
+        anEdge.weight = weight;
+        edges.push_back(anEdge);
 
         if(graphType == 'u')
         {
@@ -67,18 +71,18 @@ int main(int argc, char* argv[])
 
   
 
-    // G.printGraph();
+   
+
     
+    //////////// algorithm start ////////////////
+
+    G.printGraph();
     G.DFS();
     G.printDFS();
     G.printList(1);
     G.PrimMST(0);
     G.printPrim();
-
-
-    //cout << G.isCycle();
-    //////////// algorithm start ////////////////
-
+    G.printRemoveEdge();
     
 
     //////////// write the output file ///////////
