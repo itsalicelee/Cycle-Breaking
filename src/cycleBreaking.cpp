@@ -20,8 +20,6 @@ void Graph::initialize()  // initialize d, f, pi, color, array
     }
 }
 
-
-
 Graph::Graph(int edgeNum, int nodeNum, char graphType)  // constructor
 {
     // allocate memory
@@ -29,9 +27,9 @@ Graph::Graph(int edgeNum, int nodeNum, char graphType)  // constructor
     this->nodeNum = nodeNum;
     this->graphType = graphType;
     
-
     // initialize head pointer for all vertices
-    for (int i = 0; i < nodeNum; ++i){
+    for (int i = 0; i < nodeNum; ++i)
+    {
         this->head[i] = nullptr;
         pi.push_back(0);
 		d.push_back(0);
@@ -63,7 +61,8 @@ void Graph::printGraph()
 }
 
 // Destructor
-Graph::~Graph() {
+Graph::~Graph()
+{
     for (int i = 0; i < nodeNum; i++)
         delete[] head[i];
     delete[] head;
@@ -78,7 +77,7 @@ void Graph::printList(int i)
     Node* ptr = this->head[i];
     
 	while (ptr != nullptr)
-	{   
+    {   
 		cout << "(" << i << ", " << ptr->nodeKey
 			<< ", " << ptr->cost << ") ";
 
@@ -90,18 +89,15 @@ void Graph::printList(int i)
 }
 
 
-
-
-void Graph::DFS(){
-    
+void Graph::DFS()
+{
     this->initialize();
-
     int time = 0;
 
     for(int i = 0; i < nodeNum; ++i)
     {
-        //cout << "i: " << i  << head[i]->val << " "<< head[i]->color << endl;   // 這裡應該是要判斷頭有沒有走過（但頭是ptr怎麼辦）
-        if (color[i] == 'w'){
+        if (color[i] == 'w')
+        {
             DFS_visit(i, time);
         }
     }
@@ -111,7 +107,6 @@ void Graph::DFS(){
 
 void Graph::DFS_visit(int u, int& time)
 {
-    
     time++;
     this->d[u] = time;
     this->color[u] = 'g';
@@ -135,31 +130,19 @@ void Graph::DFS_visit(int u, int& time)
 void Graph::printDFS()
 {
     cout << "========= DFS =========" << endl;
-	for (int i = 0; i < nodeNum; ++i){
+	for (int i = 0; i < nodeNum; ++i)
 		cout << i << ": " <<  "discover time: " << d[i] << ", finish time: " << f[i] << " " << endl;
-	}
     cout << endl;
 }
 
 void Graph::PrimMST(int start)
 {
-    this->initialize();
+    this->initialize();  // initialize all arrays
     this->key[start] = 0;
     this->pi[start] = -1;
-    // int *parent = new int[nodeNum];
-    // bool *visited = new bool[nodeNum];
-    // int *weight = new int[nodeNum];
-    // for(int i=0; i<nodeNum; i++)
-    // {
-    //     visited[i] = false;
-    //     weight[i] = MAX_WEIGHT;
-    // }
-    // parent[0] = -1;
-    // weight[0] = 0;
-    
 
-    for (int i = 0; i < nodeNum; ++i){
-
+    for (int i = 0; i < nodeNum; ++i)
+    {
         int minVertex = ExtractMin(this->visited, this->key);
         visited[minVertex] = true;
         Node* v = head[minVertex];
@@ -179,26 +162,26 @@ void Graph::PrimMST(int start)
 
 void PriorityQueue::heapify_down(int i)
 {
-        // get left and right child of node at index i
-        int left = LEFT(i);
-        int right = RIGHT(i);
- 
-        int smallest = i;
- 
-        // compare A[i] with its left and right child
-        // and find smallest value
-        if (left < size() && A[left] < A[i])
-            smallest = left;
- 
-        if (right < size() && A[right] < A[smallest])
-            smallest = right;
- 
-        // swap with child having lesser value and 
-        // call heapify-down on the child
-        if (smallest != i) {
-            swap(A[i], A[smallest]);
-            heapify_down(smallest);
-        }
+    // get left and right child of node at index i
+    int left = LEFT(i);
+    int right = RIGHT(i);
+
+    int smallest = i;
+
+    // compare A[i] with its left and right child
+    // and find smallest value
+    if (left < size() && A[left] < A[i])
+        smallest = left;
+
+    if (right < size() && A[right] < A[smallest])
+        smallest = right;
+
+    // swap with child having lesser value and 
+    // call heapify-down on the child
+    if (smallest != i) {
+        swap(A[i], A[smallest]);
+        heapify_down(smallest);
+    }
 }
 
 void PriorityQueue::heapify_up(int i)
@@ -209,7 +192,6 @@ void PriorityQueue::heapify_up(int i)
     {
         // swap the two if heap property is violated
         swap(A[i], A[PARENT(i)]);
-        
         // call Heapify-up on the parent
         heapify_up(PARENT(i));
     }
@@ -217,12 +199,11 @@ void PriorityQueue::heapify_up(int i)
 
 void PriorityQueue::push(int key)
 {
-        // insert the new element to the end of the vector
-        A.push_back(key);
- 
-        // get element index and call heapify-up procedure
-        int index = size() - 1;
-        heapify_up(index);
+    // insert the new element to the end of the vector
+    A.push_back(key);
+    // get element index and call heapify-up procedure
+    int index = size() - 1;
+    heapify_up(index);
 }
 
 void PriorityQueue::pop()
@@ -265,7 +246,6 @@ int PriorityQueue::top()
 }
 bool PriorityQueue::inQueue(int n)
 {   
-    // better way??
     for(int i =0; i < A.size(); i++)
     {
         if (n == A[i])
@@ -296,11 +276,10 @@ void Graph::printPrim()
 
 int Graph::ExtractMin(bool_arr visited, int_arr weight)
 {
+    // function which is used in PrimMST
     int minVertex = -1;
-    for(int i = 0; i < nodeNum; ++i)
-    {
-        if (!visited[i] && (minVertex == -1 || key[i] < key[minVertex]))
-        {
+    for(int i = 0; i < nodeNum; ++i){
+        if (!visited[i] && (minVertex == -1 || key[i] < key[minVertex])){
             minVertex = i;
         }
     }
