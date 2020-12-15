@@ -18,6 +18,9 @@ void Graph::initialize()  // initialize d, f, pi, color, array
         color[i] = 'w';
         weight[i] = -MAX_WEIGHT;
         visited[i] = false;
+        visited_weight[i].first = false;
+        visited_weight[i].second = -MAX_WEIGHT;
+        
     }
 }
 
@@ -39,6 +42,10 @@ Graph::Graph(int edgeNum, int nodeNum, char graphType)  // constructor
 		color.push_back('w');
         weight.push_back(0);
         visited.push_back(false);
+        std::pair<bool,int> temp;
+        temp.first = false;
+        temp.second = 0;
+        visited_weight.push_back(temp);
     }
     
 }
@@ -144,6 +151,8 @@ void Graph::PrimMST(int start)
     this->weight[start] = 0;
     this->pi[start] = -MAX_WEIGHT;
 
+
+    // test min heap
     vector<int> temp = {3, 2 ,1, 6, 4,5};
     BinaryHeap b;
     b.printMinHeap(temp);
@@ -153,6 +162,7 @@ void Graph::PrimMST(int start)
     b.printMinHeap(temp);
     int m = b.ExtractMaxFromHeap(temp);
     cout << "m is: " << m;
+    
     
     for (int i = 0; i < nodeNum; ++i)
     {
@@ -211,6 +221,12 @@ int Graph::ExtractMax(bool_arr visited, int_arr weight)
             minVertex = i;
         }
     }
+
+    sort(visited_weight.begin(), visited_weight.end());
+    
+
+
+
     return minVertex;
 }
 
