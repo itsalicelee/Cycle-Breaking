@@ -50,14 +50,14 @@ private:
 	int_arr d, f, weight, pi;
 	bool_arr visited;
 	node_arr remove;
-	
-	std::vector< std::pair<int, Node*> > removeNode;
 	Node* getAdjListNode(int value, int weight, Node* head);
 
 public:
 	std::vector<std::vector<int> > edgeSet;
 	std::vector<std::vector<int> > weightSet;
 	int nodeNum;	// number of nodes in the graph
+	int removeCost = 0;
+	std::vector< std::pair<int, Node*> > removeNode;
 	Node** head;  // An array of pointers to Node to represent adjacency list
 	Graph(int nodeNum, char graphType);  // Constructor
 	Graph(int edgeNum, int nodeNum, char graphType);  // Constructor

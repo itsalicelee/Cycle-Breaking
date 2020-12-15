@@ -104,15 +104,16 @@ int main(int argc, char* argv[])
     if the graph has no cycle, print out 0
     */
 
-    int minWeight;
-    int cnt;
-    fout << minWeight << "\n";
-
-    Edge output[3] = {{0,1},{1,2},{3,4}};
-    if(cnt != 0){
-        for (size_t i = 0; i < 3; ++i) 
-            fout << output[i].src << " " << output[i].dest << "\n";
+    
+    if (G.removeNode.size()!= 0)  // has cycle
+    {
+        fout << G.removeCost << endl;
+        for(int i = 0 ; i < G.removeNode.size(); ++i)
+            fout << G.removeNode[i].first << " " << G.removeNode[i].second->nodeKey << " " << G.removeNode[i].second->cost << endl;
     }
+    else  // no cycle
+        cout << "0";
+
     fin.close();
     fout.close();
     

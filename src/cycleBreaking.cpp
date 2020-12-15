@@ -212,11 +212,11 @@ int Graph::ExtractMax(bool_arr visited, int_arr weight)
 
 void Graph::printRemoveEdge()
 {
-    int removeCost = 0;
+    
     // initially, we add new edges undirected a->b, b->a
     // now we only need to add those is in the input to remove 
     
-    for(int i = 0; i < nodeNum; i++)
+    for(int i = 0; i < this->nodeNum; i++)
     {
         Node* a = this->head[i];
         
@@ -230,7 +230,7 @@ void Graph::printRemoveEdge()
                   &&(std::find(weightSet[i].begin(),weightSet[i].end(),a->cost) != weightSet[i].end()))  // is origin input
                     {
                         this->removeNode.push_back(std::make_pair(i,a)); 
-                        removeCost += a->cost;
+                        this->removeCost += a->cost;
                     } 
                     // removeNode is a vector of Pairs
                     // <(start1,Node1), (start2,Node2)...>
@@ -239,15 +239,18 @@ void Graph::printRemoveEdge()
             a = a->next;
         }
     }   
+    
     cout << "========= Remove edges: (start,end,cost) =========" << endl;
-    if (removeNode.size()!= 0)  // has cycle
+    if (this->removeNode.size()!= 0)  // has cycle
     {
         cout << "Has Cycle!!" << endl;
-        cout << removeCost << endl;
-        for(int i = 0 ; i < removeNode.size(); ++i)
-            cout << removeNode[i].first << " " << removeNode[i].second->nodeKey << " " << removeNode[i].second->cost << endl;
+        cout << this->removeCost << endl;
+        for(int i = 0 ; i < this->removeNode.size(); ++i)
+            cout << this->removeNode[i].first << " " << this->removeNode[i].second->nodeKey << " " << removeNode[i].second->cost << endl;
     }
     else  // no cycle
         cout << "0";
+
+    // return for writing file
 }
 
