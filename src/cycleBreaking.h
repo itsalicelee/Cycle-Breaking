@@ -73,7 +73,6 @@ public:
 	void printPrim();
 	void initialize();	
 	void printRemoveEdge();	
-	//std::list<int, int> *adj;
 
 };
 
@@ -92,7 +91,6 @@ private:
     // Recursive Heapify-down algorithm
     // the node at index i and its two direct children
     void heapify_down(int i);  // violates the heap property
-
     void heapify_up(int i);  // Recursive Heapify-up algorithm
     
 public:
@@ -106,7 +104,18 @@ public:
 };
 
 
+class BinaryHeap {
+private:
+        void    MinHeapify(std::vector<int>&, int); // make tree with given root be a max-heap 
+        void    BuildMinHeap(std::vector<int>&); // make data become a max-heap
+        
+		
+public:
+		int     heapSize; // heap size used in heap sort
+		void    HeapSort(std::vector<int>&); // sort data using heap sort
+		int 	ExtractMaxFromHeap(std::vector<int>&);
+		void  	printMinHeap(std::vector<int>& );
 
-
+};
 
 #endif

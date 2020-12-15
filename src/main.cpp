@@ -69,31 +69,35 @@ int main(int argc, char* argv[])
             u->cost = weight;
             u->next = G.head[end];
             G.head[end] = u;
+            
         }
-    }
+       
+
     
+    }
+   
 
     // test edgeSet and weightSet 
-    cout << "========= Original Input =========" << endl;
-    for(int i = 0; i < nodeNum; i++)
-    {
-        for(int j = 0; j < G.edgeSet.size(); j++)
-            if (j < G.edgeSet[i].size())
-                cout << i << " "<< G.edgeSet[i][j] << " " << G.weightSet[i][j] << endl;
-    }
+    // cout << "========= Original Input =========" << endl;
+    // for(int i = 0; i < nodeNum; i++)
+    // {
+    //     for(int j = 0; j < G.edgeSet.size(); j++)
+    //         if (j < G.edgeSet[i].size())
+    //             cout << i << " "<< G.edgeSet[i][j] << " " << G.weightSet[i][j] << endl;
+    // }
 
    
 
     
     //////////// algorithm start ////////////////
 
-    G.printGraph();
-    // // G.DFS();
-    // // G.printDFS();
-    // // G.printList(1);
+    // G.printGraph();
+    // G.DFS();
+    // G.printDFS();
+    // G.printList(1);
     G.PrimMST(0);
-    G.printPrim();
-    G.printRemoveEdge();
+    // G.printPrim();
+    // G.printRemoveEdge();
     
 
     //////////// write the output file ///////////
@@ -112,7 +116,7 @@ int main(int argc, char* argv[])
             fout << G.removeNode[i].first << " " << G.removeNode[i].second->nodeKey << " " << G.removeNode[i].second->cost << endl;
     }
     else  // no cycle
-        cout << "0";
+        fout << "0";
 
     fin.close();
     fout.close();

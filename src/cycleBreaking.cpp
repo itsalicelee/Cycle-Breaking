@@ -136,38 +136,35 @@ void Graph::printDFS()
     cout << endl;
 }
 
-void Graph::KruskalMST()
-{
-
-
-
-
-
-
-
-
-
-
-
-
-}
-
-
-
-
-
-
-
 
 void Graph::PrimMST(int start)
 {
+    // Create Maximum Spanning Tree, want to remove edges with minimum weight
     this->initialize();  // initialize all arrays
     this->weight[start] = 0;
     this->pi[start] = -MAX_WEIGHT;
 
+    vector<int> temp = {3, 2 ,1, 6, 4,5};
+    BinaryHeap b;
+    b.printMinHeap(temp);
+    b.HeapSort(temp);
+    cout << endl ;
+    cout << "=======after======" << endl;
+    b.printMinHeap(temp);
+    int m = b.ExtractMaxFromHeap(temp);
+    cout << "m is: " << m;
+    
     for (int i = 0; i < nodeNum; ++i)
     {
         int maxVertex = ExtractMax(this->visited, this->weight);
+
+        //////////////////////////////////
+
+        // if(b.heapSize != 0){
+        //     int newVertex  = b.ExtractMaxFromHeap(this->weight);
+        //     cout <<  " new: " << newVertex << endl;
+        // }
+        /////////////////////////////////
         visited[maxVertex] = true;
         Node* v = head[maxVertex];
 
@@ -200,7 +197,14 @@ void Graph::printPrim()
 
 int Graph::ExtractMax(bool_arr visited, int_arr weight)
 {
-    // function which is used in PrimMST
+    // Given visited array and weight array, find out the largest weight that has not visited
+    // function used in PrimMST, faster way?
+    // NOTE!!!!!
+    // We can make weight and visited into vector of pair, 
+    // and sort the entire vecor like this:
+    // <(0,20), (0,18), (0,15), (0,14),(1,23),(1,20),(1,15)>
+    // which means the nodes that we haven't visited
+    //  
     int minVertex = -1;
     for(int i = 0; i < nodeNum; ++i){
         if (!visited[i] && (minVertex == -1 || weight[i] > weight[minVertex])){
@@ -238,6 +242,7 @@ void Graph::printRemoveEdge()
             }
             a = a->next;
         }
+        
     }   
     
     cout << "========= Remove edges: (start,end,cost) =========" << endl;
@@ -250,7 +255,64 @@ void Graph::printRemoveEdge()
     }
     else  // no cycle
         cout << "0";
-
-    // return for writing file
 }
 
+// Heap sort method
+void BinaryHeap::HeapSort(std::vector<int>& data) {
+    // Build Max-Heap
+    BuildMinHeap(data);
+    // 1. Swap data[0] which is max value and data[i] so that the max value will be in correct location
+    // 2. Do max-heapify for data[0]
+    for (int i = data.size() - 1; i >= 1; i--) {
+        swap(data[0],data[i]);
+        heapSize--;
+        MinHeapify(data,0);
+    }
+}
+
+void BinaryHeap::printMinHeap(std::vector<int>& data)
+{
+    for(int i = 0; i < data.size(); i++)
+    {
+        cout << data[i] << endl;
+    }
+}
+
+//Max heapify
+void BinaryHeap::MinHeapify(std::vector<int>& data, int root) {
+    // Function : Make tree with given root be a max-heap if both right and left sub-tree are max-heap
+    // TODO : Please complete max-heapify code here
+    int left = root * 2 + 1;  // or * 2 + 1
+    int right = root * 2 + 2;  // or * 2 + 2
+    int smallest;
+    if (left < heapSize && data[left] < data[root])
+        smallest = left;
+    else
+        smallest = root;
+    if (right < heapSize && data[right] < data[smallest])
+        smallest = right;
+    if (smallest != root)
+    {
+        swap(data[smallest], data[root]);
+        MinHeapify(data, smallest);
+    }
+}
+
+
+//Build max heap
+void BinaryHeap::BuildMinHeap(std::vector<int>& data) {
+    heapSize = data.size(); // initialize heap size
+    // Function : Make input data become a max-heap
+    for(int i = heapSize/2 - 1; i >= 0; i--)  
+        MinHeapify(data, i);
+}
+
+int BinaryHeap::ExtractMaxFromHeap(std::vector<int>& data)
+{
+    //TODO
+    int max = data[0];
+    data[0] = data[data.back()];
+    data.pop_back();
+    MinHeapify(data,0);
+    return max;
+}
