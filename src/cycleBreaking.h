@@ -31,6 +31,10 @@ struct Edge {
 	int src, dest, weight;
 };
 
+struct subset {
+    int parent;
+    int rank;
+};
 // struct First{
 // 	Node* head;
 // 	Node* tail;
@@ -46,10 +50,13 @@ private:
 	int_arr d, f, weight, pi;
 	bool_arr visited;
 	node_arr remove;
+	
 	std::vector< std::pair<int, Node*> > removeNode;
 	Node* getAdjListNode(int value, int weight, Node* head);
 
 public:
+	std::vector<std::vector<int> > edgeSet;
+	std::vector<std::vector<int> > weightSet;
 	int nodeNum;	// number of nodes in the graph
 	Node** head;  // An array of pointers to Node to represent adjacency list
 	Graph(int nodeNum, char graphType);  // Constructor
@@ -61,6 +68,7 @@ public:
 	void printDFS();
 	void DFS();
 	void PrimMST(int start);
+	void KruskalMST();
 	int  ExtractMax(bool_arr visited, int_arr weight);
 	void printPrim();
 	void initialize();	

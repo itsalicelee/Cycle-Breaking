@@ -4,6 +4,7 @@
 #include<utility>
 #include<stdlib.h>
 #include<set>
+#include<algorithm>
 #include"cycleBreaking.h"
 using namespace std;
 
@@ -135,6 +136,29 @@ void Graph::printDFS()
     cout << endl;
 }
 
+void Graph::KruskalMST()
+{
+
+
+
+
+
+
+
+
+
+
+
+
+}
+
+
+
+
+
+
+
+
 void Graph::PrimMST(int start)
 {
     this->initialize();  // initialize all arrays
@@ -188,29 +212,42 @@ int Graph::ExtractMax(bool_arr visited, int_arr weight)
 
 void Graph::printRemoveEdge()
 {
-    
+    int removeCost = 0;
     // initially, we add new edges undirected a->b, b->a
     // now we only need to add those is in the input to remove 
     
     for(int i = 0; i < nodeNum; i++)
     {
         Node* a = this->head[i];
-        bool remove = false;
+        
         while(a!=  nullptr)
         {    
             // undirected
-            if (!( pi[i] == a->nodeKey  &&  weight[i] == a->cost) ) 
-                this->removeNode.push_back(std::make_pair(i,a));
+            if (  (pi[i] != a->nodeKey && pi[ a->nodeKey]!= i) && weight[i] != a->cost ) // not in MST and not the starting point
+            {
+                cout << "not in MST" <<  "i: " << i << ", nodeKey" << a->nodeKey <<  ", cost" <<  a->cost <<  endl;;
+                if ((std::find(edgeSet[i].begin(),edgeSet[i].end(),a->nodeKey) != edgeSet[i].end())
+                  &&(std::find(weightSet[i].begin(),weightSet[i].end(),a->cost) != weightSet[i].end()))  // is origin input
+                    {
+                        this->removeNode.push_back(std::make_pair(i,a)); 
+                        removeCost += a->cost;
+                    } 
+                    // removeNode is a vector of Pairs
+                    // <(start1,Node1), (start2,Node2)...>
+                    ;
+            }
             a = a->next;
         }
-
-
-
     }   
-    
-    
-    
-    cout << "Remove edges: (start,end,cost)" << endl;
-    for(int i = 0 ; i < removeNode.size(); ++i)
-        cout << removeNode[i].first << " " << removeNode[i].second->nodeKey << " " << removeNode[i].second->cost << endl;
+    cout << "========= Remove edges: (start,end,cost) =========" << endl;
+    if (removeNode.size()!= 0)  // has cycle
+    {
+        cout << "Has Cycle!!" << endl;
+        cout << removeCost << endl;
+        for(int i = 0 ; i < removeNode.size(); ++i)
+            cout << removeNode[i].first << " " << removeNode[i].second->nodeKey << " " << removeNode[i].second->cost << endl;
+    }
+    else  // no cycle
+        cout << "0";
 }
+
