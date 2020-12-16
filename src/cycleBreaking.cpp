@@ -115,15 +115,20 @@ void Graph::DFS_visit(int u, int& time)
     time++;
     this->d[u] = time;
     this->color[u] = 'g';
+    this->visited[u] = true;
 
     Node* v = head[u];
     while(v != nullptr)
     {
         if(color[v->nodeKey] == 'w')
         {
+            visited[v->nodeKey] = true;
             pi[v->nodeKey]= u;
             DFS_visit(v->nodeKey, time);
         }
+        else if (color[v->nodeKey] == 'b')
+            hasCycle = true;
+        
         v = v->next;
     }
     this->color[u] = 'b';
@@ -166,7 +171,7 @@ void Graph::PrimMST(int start)
     for (int i = 0; i < nodeNum; ++i)
     {
         int maxVertex = ExtractMax(this->visited, this->weight);
-        cout << " max vertex" << maxVertex << endl;
+        // cout << " max vertex" << maxVertex << endl;
         visited[maxVertex] = true;
         Node* v = head[maxVertex];
 
@@ -223,7 +228,7 @@ void Graph::printRemoveEdge()
     // initially, we add new edges undirected a->b, b->a
     // now we only need to add those is in the input to remove 
     
-    for(int i = 0; i < this->nodeNum; i++)
+    for(int i = 0; i < nodeNum; i++)
     {
         Node* a = this->head[i];
         while(a!=  nullptr)
@@ -245,6 +250,8 @@ void Graph::printRemoveEdge()
             a = a->next;
         }
     }   
+
+
     
     
     cout << "========= Remove edges: (start,end,cost) =========" << endl;
@@ -256,7 +263,7 @@ void Graph::printRemoveEdge()
             cout << this->removeNode[i].first << " " << this->removeNode[i].second->nodeKey << " " << removeNode[i].second->cost << endl;
     }
     else  // no cycle
-        cout << "No Cycle";
+        cout << "No remove edges!" << endl;
     
 }
 
@@ -319,3 +326,29 @@ int BinaryHeap::ExtractMaxFromHeap(std::vector<int>& data)
     MinHeapify(data,0);
     return max;
 }
+
+
+/* Reference
+bool Graph::isCyclicUtil(int v, bool_arr visited, bool *recStack) 
+{ 
+    if(visited[v] == false) 
+    { 
+        // Mark the current node as visited and part of recursion stack 
+        visited[v] = true; 
+        recStack[v] = true; 
+  
+        // Recur for all the vertices adjacent to this vertex 
+        list<int>::iterator i; 
+        for(i = head[v].begin(); i != head[v].end(); ++i) 
+        { 
+            if ( !visited[*i] && isCyclicUtil(*i, visited, recStack) ) 
+                return true; 
+            else if (recStack[*i]) 
+                return true; 
+        } 
+  
+    } 
+    recStack[v] = false;  // remove the vertex from recursion stack 
+    return false; 
+} 
+*/

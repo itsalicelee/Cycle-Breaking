@@ -76,9 +76,6 @@ int main(int argc, char* argv[])
             G.head[end] = u;
             
         }
-       
-
-    
     }
    
 
@@ -103,6 +100,12 @@ int main(int argc, char* argv[])
     G.PrimMST(0);
     G.printPrim();
     G.printRemoveEdge();
+    
+    if(G.hasCycle == true)
+        cout << "Has Cycle!!!" << endl;
+    else
+        cout << "No Cycle!!!" << endl;
+    
     
 
     //////////// write the output file ///////////

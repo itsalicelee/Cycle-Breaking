@@ -58,6 +58,7 @@ public:
 	std::vector<std::vector<int> > weightSet;
 	int nodeNum;	// number of nodes in the graph
 	int removeCost = 0;
+	bool hasCycle;
 	std::vector< std::pair<int, Node*> > removeNode;
 	Node** head;  // An array of pointers to Node to represent adjacency list
 	Graph(int nodeNum, char graphType);  // Constructor
@@ -74,6 +75,7 @@ public:
 	void printPrim();
 	void initialize();	
 	void printRemoveEdge();	
+	bool isCyclicUtil(int v, bool_arr visited, bool *rs);
 
 };
 
