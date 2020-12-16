@@ -13,7 +13,7 @@ typedef						std::vector<int> int_arr;
 typedef						std::vector<char> char_arr;
 typedef 					std::vector<bool> bool_arr;
 typedef 					std::list<struct Node> node_arr;
-typedef 					std::vector<std::pair<bool ,int> > vp_arr;
+// typedef 					std::vector<std::vector<bool ,int> > vp_arr;
 
 const int MAX_WEIGHT = 999;
 // Data structure to store Adjacency list nodes
@@ -50,7 +50,7 @@ private:
 	int_arr d, f, weight, pi;
 	bool_arr visited;
 	node_arr remove;
-	vp_arr visited_weight;
+	// vp_arr visited_weight;
 	Node* getAdjListNode(int value, int weight, Node* head);
 
 public:

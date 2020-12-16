@@ -1,8 +1,20 @@
+'''
+This file should not be put in any folders!! 
+
+Usage: generate random sample to the directory ./inputs
+File name will be: test_[edgeNum]
+can customize undirected/directed, vertex, edge
+
+Command:
+python3 gen_sample.py
+'''
+
+
 import random
 import networkx as nx
-directed = False
-vertex = 10000
-edge = 1000000
+directed = False  # can be modified
+vertex = 100  # can be modified
+edge = 1000  # can be modified
 
 filename = "./inputs/test_" + str(edge) + ".in"
 f = open(filename, "w")

@@ -4,6 +4,11 @@
 //  Synopsis   [The main program of 2020 fall Algorithm PA3:Cycle Breaking]
 //  Date       2020/12/10
 // **************************************************************************
+/*
+TODO
+- add positive edges to MST until it has a cycle
+
+*/
 
 #include<iostream>
 #include<fstream>
@@ -91,13 +96,13 @@ int main(int argc, char* argv[])
     
     //////////// algorithm start ////////////////
 
-    // G.printGraph();
-    // G.DFS();
+    G.printGraph();
+    G.DFS();
     // G.printDFS();
     // G.printList(1);
     G.PrimMST(0);
-    // G.printPrim();
-    // G.printRemoveEdge();
+    G.printPrim();
+    G.printRemoveEdge();
     
 
     //////////// write the output file ///////////

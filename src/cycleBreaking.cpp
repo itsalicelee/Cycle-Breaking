@@ -18,8 +18,8 @@ void Graph::initialize()  // initialize d, f, pi, color, array
         color[i] = 'w';
         weight[i] = -MAX_WEIGHT;
         visited[i] = false;
-        visited_weight[i].first = false;
-        visited_weight[i].second = -MAX_WEIGHT;
+        // visited_weight[i].first = false;
+        // visited_weight[i].second = -MAX_WEIGHT;
         
     }
 }
@@ -42,10 +42,7 @@ Graph::Graph(int edgeNum, int nodeNum, char graphType)  // constructor
 		color.push_back('w');
         weight.push_back(0);
         visited.push_back(false);
-        std::pair<bool,int> temp;
-        temp.first = false;
-        temp.second = 0;
-        visited_weight.push_back(temp);
+
     }
     
 }
@@ -152,7 +149,8 @@ void Graph::PrimMST(int start)
     this->pi[start] = -MAX_WEIGHT;
 
 
-    // test min heap
+    /*
+    //test min heap
     vector<int> temp = {3, 2 ,1, 6, 4,5};
     BinaryHeap b;
     b.printMinHeap(temp);
@@ -162,19 +160,13 @@ void Graph::PrimMST(int start)
     b.printMinHeap(temp);
     int m = b.ExtractMaxFromHeap(temp);
     cout << "m is: " << m;
+    */
     
     
     for (int i = 0; i < nodeNum; ++i)
     {
         int maxVertex = ExtractMax(this->visited, this->weight);
-
-        //////////////////////////////////
-
-        // if(b.heapSize != 0){
-        //     int newVertex  = b.ExtractMaxFromHeap(this->weight);
-        //     cout <<  " new: " << newVertex << endl;
-        // }
-        /////////////////////////////////
+        cout << " max vertex" << maxVertex << endl;
         visited[maxVertex] = true;
         Node* v = head[maxVertex];
 
@@ -187,6 +179,7 @@ void Graph::PrimMST(int start)
             }
             v = v ->next;
         }
+
     }
     
 }
@@ -198,7 +191,6 @@ void Graph::printPrim()
 	for (int i = 0; i < nodeNum; ++i){
 		cout <<  "i: " << i << ": " <<  "pi: " << pi[i] << ",   weight: " << weight[i] << " " << endl;
         totalCost += weight[i];
-
 	}
     cout << "Total cost is: " << totalCost << endl;
     cout << endl;
@@ -221,12 +213,7 @@ int Graph::ExtractMax(bool_arr visited, int_arr weight)
             minVertex = i;
         }
     }
-
-    sort(visited_weight.begin(), visited_weight.end());
-    
-
-
-
+    // sort(visited_weight.begin(), visited_weight.end());
     return minVertex;
 }
 
@@ -239,13 +226,12 @@ void Graph::printRemoveEdge()
     for(int i = 0; i < this->nodeNum; i++)
     {
         Node* a = this->head[i];
-        
         while(a!=  nullptr)
         {    
             // undirected
             if (  (pi[i] != a->nodeKey && pi[ a->nodeKey]!= i) && weight[i] != a->cost ) // not in MST and not the starting point
             {
-                cout << "not in MST" <<  "i: " << i << ", nodeKey" << a->nodeKey <<  ", cost" <<  a->cost <<  endl;;
+                // cout << "not in MST" <<  "i: " << i << ", nodeKey" << a->nodeKey <<  ", cost" <<  a->cost <<  endl;;
                 if ((std::find(edgeSet[i].begin(),edgeSet[i].end(),a->nodeKey) != edgeSet[i].end())
                   &&(std::find(weightSet[i].begin(),weightSet[i].end(),a->cost) != weightSet[i].end()))  // is origin input
                     {
@@ -258,8 +244,8 @@ void Graph::printRemoveEdge()
             }
             a = a->next;
         }
-        
     }   
+    
     
     cout << "========= Remove edges: (start,end,cost) =========" << endl;
     if (this->removeNode.size()!= 0)  // has cycle
@@ -270,7 +256,8 @@ void Graph::printRemoveEdge()
             cout << this->removeNode[i].first << " " << this->removeNode[i].second->nodeKey << " " << removeNode[i].second->cost << endl;
     }
     else  // no cycle
-        cout << "0";
+        cout << "No Cycle";
+    
 }
 
 // Heap sort method
