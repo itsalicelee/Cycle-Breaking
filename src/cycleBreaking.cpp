@@ -234,11 +234,10 @@ void Graph::printRemoveEdge()
         while(a!=  nullptr)
         {    
             // undirected
-            if (  (pi[i] != a->nodeKey && pi[ a->nodeKey]!= i) && weight[i] != a->cost ) // not in MST and not the starting point
+            if (  (pi[i] != a->nodeKey && pi[ a->nodeKey]!= i) ) // not in MST and not the starting point
             {
                 // cout << "not in MST" <<  "i: " << i << ", nodeKey" << a->nodeKey <<  ", cost" <<  a->cost <<  endl;;
-                if ((std::find(edgeSet[i].begin(),edgeSet[i].end(),a->nodeKey) != edgeSet[i].end())
-                  &&(std::find(weightSet[i].begin(),weightSet[i].end(),a->cost) != weightSet[i].end()))  // is origin input
+                if (std::find(edgeSet[i].begin(),edgeSet[i].end(),a->nodeKey) != edgeSet[i].end())  // is origin input
                     {
                         this->removeNode.push_back(std::make_pair(i,a)); 
                         this->removeCost += a->cost;
@@ -257,10 +256,10 @@ void Graph::printRemoveEdge()
     cout << "========= Remove edges: (start,end,cost) =========" << endl;
     if (this->removeNode.size()!= 0)  // has cycle
     {
-        cout << "Has Cycle!!" << endl;
         cout << this->removeCost << endl;
         for(int i = 0 ; i < this->removeNode.size(); ++i)
             cout << this->removeNode[i].first << " " << this->removeNode[i].second->nodeKey << " " << removeNode[i].second->cost << endl;
+        cout << "Has Cycle: " << removeNode.size() << " edges removed!" << endl;
     }
     else  // no cycle
         cout << "No remove edges!" << endl;

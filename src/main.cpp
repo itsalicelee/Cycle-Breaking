@@ -80,20 +80,20 @@ int main(int argc, char* argv[])
    
 
     // test edgeSet and weightSet 
-    // cout << "========= Original Input =========" << endl;
-    // for(int i = 0; i < nodeNum; i++)
-    // {
-    //     for(int j = 0; j < G.edgeSet.size(); j++)
-    //         if (j < G.edgeSet[i].size())
-    //             cout << i << " "<< G.edgeSet[i][j] << " " << G.weightSet[i][j] << endl;
-    // }
+    cout << "========= Original Input =========" << endl;
+    for(int i = 0; i < nodeNum; i++)
+    {
+        for(int j = 0; j < G.edgeSet.size(); j++)
+            if (j < G.edgeSet[i].size())
+                cout << i << " "<< G.edgeSet[i][j] << " " << G.weightSet[i][j] << endl;
+    }
 
    
 
     
     //////////// algorithm start ////////////////
 
-    G.printGraph();
+    // G.printGraph();
     G.DFS();
     // G.printDFS();
     // G.printList(1);
@@ -102,9 +102,9 @@ int main(int argc, char* argv[])
     G.printRemoveEdge();
     
     if(G.hasCycle == true)
-        cout << "Has Cycle!!!" << endl;
+        cout << "This Graph Has Cycle!!!" << endl;
     else
-        cout << "No Cycle!!!" << endl;
+        cout << "This Graph Has No Cycle!!!" << endl;
     
     
 
