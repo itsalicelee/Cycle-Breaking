@@ -17,6 +17,9 @@ void Graph::initialize()  // initialize d, f, pi, color, array
         color[i] = 'w';
         weight[i] = -MAX_WEIGHT;
         visited[i] = false;
+        // visited_weight[i].first = false;
+        // visited_weight[i].second = -MAX_WEIGHT;
+        
     }
 }
 
@@ -37,6 +40,7 @@ Graph::Graph(int edgeNum, int nodeNum, char graphType)  // constructor
 		color.push_back('w');
         weight.push_back(0);
         visited.push_back(false);
+
     }
     
 }
@@ -87,8 +91,11 @@ void Graph::DFS()
     this->initialize();
     int time = 0;
 
-    for(int i = 0; i < nodeNum; ++i){
-        if (color[i] == 'w'){
+
+    for(int i = 0; i < nodeNum; ++i)
+    {
+        if (color[i] == 'w')
+        {
             DFS_visit(i, time);
         }
     }

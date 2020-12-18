@@ -81,11 +81,15 @@ int main(int argc, char* argv[])
             u->cost = weight;
             u->next = G.head[end];
             G.head[end] = u;
+<<<<<<< HEAD
 
             anEdge.src = start;
             anEdge.dest =  end;
             anEdge.weight = weight+100;
             G.edgeList.push_back(anEdge);
+=======
+            
+>>>>>>> 1b9d28108c25d27615c48e76027ec96c7de96e6a
         }
     }
    
@@ -105,12 +109,27 @@ int main(int argc, char* argv[])
     //////////// algorithm start ////////////////
 
     // G.printGraph();
+<<<<<<< HEAD
     // G.DFS();
     // // G.printDFS();
     // // G.printList(1);
     // G.PrimMST(0);
     // G.printPrim();
     // G.printRemoveEdge();
+    
+    if(G.hasCycle == true)
+        cout << "This Graph Has Cycle!!!" << endl;
+    else
+        cout << "This Graph Has No Cycle!!!" << endl;
+    
+=======
+    G.DFS();
+    // G.printDFS();
+    // G.printList(1);
+    G.PrimMST(0);
+    G.printPrim();
+    G.printRemoveEdge();
+>>>>>>> 1b9d28108c25d27615c48e76027ec96c7de96e6a
     
     if(G.hasCycle == true)
         cout << "This Graph Has Cycle!!!" << endl;
