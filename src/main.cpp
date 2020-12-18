@@ -47,7 +47,8 @@ int main(int argc, char* argv[])
     
     int start, end, weight;
     Graph G(edgeNum, nodeNum, graphType); // create a graph
-    
+    Edge anEdge;
+
     // allocate memory for edgeSet and weightSet
     G.edgeSet.resize(nodeNum);
     G.weightSet.resize(nodeNum);
@@ -61,11 +62,17 @@ int main(int argc, char* argv[])
     	v->cost = weight;
     	v->next = G.head[start];
     	G.head[start] = v;
+        anEdge.src = start;
+        anEdge.dest = end;
+        anEdge.weight = weight+100;
+        
 
+        G.edgeList.push_back(anEdge);
 
         // memorize the initial edges
         G.edgeSet[start].push_back(end);
         G.weightSet[start].push_back(weight);
+
 
         if(graphType == 'u')
         {
@@ -74,32 +81,36 @@ int main(int argc, char* argv[])
             u->cost = weight;
             u->next = G.head[end];
             G.head[end] = u;
-            
+
+            anEdge.src = start;
+            anEdge.dest =  end;
+            anEdge.weight = weight+100;
+            G.edgeList.push_back(anEdge);
         }
     }
    
 
     // test edgeSet and weightSet 
-    cout << "========= Original Input =========" << endl;
-    for(int i = 0; i < nodeNum; i++)
-    {
-        for(int j = 0; j < G.edgeSet.size(); j++)
-            if (j < G.edgeSet[i].size())
-                cout << i << " "<< G.edgeSet[i][j] << " " << G.weightSet[i][j] << endl;
-    }
+    // cout << "========= Original Input =========" << endl;
+    // for(int i = 0; i < nodeNum; i++)
+    // {
+    //     for(int j = 0; j < G.edgeSet.size(); j++)
+    //         if (j < G.edgeSet[i].size())
+    //             cout << i << " "<< G.edgeSet[i][j] << " " << G.weightSet[i][j] << endl;
+    // }
 
-   
+    G.countingSort();
 
     
     //////////// algorithm start ////////////////
 
     // G.printGraph();
-    G.DFS();
-    // G.printDFS();
-    // G.printList(1);
-    G.PrimMST(0);
-    G.printPrim();
-    G.printRemoveEdge();
+    // G.DFS();
+    // // G.printDFS();
+    // // G.printList(1);
+    // G.PrimMST(0);
+    // G.printPrim();
+    // G.printRemoveEdge();
     
     if(G.hasCycle == true)
         cout << "This Graph Has Cycle!!!" << endl;

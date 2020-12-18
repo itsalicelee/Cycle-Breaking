@@ -1,26 +1,22 @@
-#include<iostream>
 #include<queue>
 #include<vector>
 #include<utility>
 #include<stdlib.h>
 #include<set>
 #include<algorithm>
+#include<iostream>
 #include"cycleBreaking.h"
 using namespace std;
 
 void Graph::initialize()  // initialize d, f, pi, color, array
 {
-    for(int i = 0; i < nodeNum; i++)
-    {
+    for(int i = 0; i < nodeNum; i++){
         d[i] = 0;
         f[i] = 0;
         pi[i] = -1;
         color[i] = 'w';
         weight[i] = -MAX_WEIGHT;
         visited[i] = false;
-        // visited_weight[i].first = false;
-        // visited_weight[i].second = -MAX_WEIGHT;
-        
     }
 }
 
@@ -32,8 +28,7 @@ Graph::Graph(int edgeNum, int nodeNum, char graphType)  // constructor
     this->graphType = graphType;
     
     // initialize head pointer for all vertices
-    for (int i = 0; i < nodeNum; ++i)
-    {
+    for (int i = 0; i < nodeNum; ++i){
         this->head[i] = nullptr;
         pi.push_back(0);
 		d.push_back(0);
@@ -42,7 +37,6 @@ Graph::Graph(int edgeNum, int nodeNum, char graphType)  // constructor
 		color.push_back('w');
         weight.push_back(0);
         visited.push_back(false);
-
     }
     
 }
@@ -50,18 +44,16 @@ Graph::Graph(int edgeNum, int nodeNum, char graphType)  // constructor
 
 void Graph::printGraph()
 {
-    cout << "========= Graph =========" << endl;
+    std::cout << "========= Graph =========" << endl;
     // print adjacency list representation of graph
-    for (int i = 0; i < nodeNum; ++i)
-    {  
-        cout << "head" << i << ":" << endl;
+    for (int i = 0; i < nodeNum; ++i){  
+        std::cout << "head" << i << ":" << endl;
         Node* a = head[i];
-        while(a != nullptr)
-        {
-            cout << "("<<a->nodeKey << "," << a->cost  << ")"<< endl;
+        while(a != nullptr){
+            std::cout << "("<<a->nodeKey << "," << a->cost  << ")"<< endl;
             a = a ->next;
         }
-        cout << endl;
+        std::cout << endl;
     }
 }
 
@@ -81,16 +73,12 @@ void Graph::printList(int i)
     //given i and G.head[i]
     Node* ptr = this->head[i];
     
-	while (ptr != nullptr)
-    {   
-		cout << "(" << i << ", " << ptr->nodeKey
-			<< ", " << ptr->cost << ") ";
-
+	while (ptr != nullptr){   
+		std::cout << "(" << i << ", " << ptr->nodeKey << ", " << ptr->cost << ") ";
 		ptr = ptr->next;
-
 	}
-    cout << endl;
-    cout << endl;
+    std::cout << endl;
+    std::cout << endl;
 }
 
 
@@ -99,10 +87,8 @@ void Graph::DFS()
     this->initialize();
     int time = 0;
 
-    for(int i = 0; i < nodeNum; ++i)
-    {
-        if (color[i] == 'w')
-        {
+    for(int i = 0; i < nodeNum; ++i){
+        if (color[i] == 'w'){
             DFS_visit(i, time);
         }
     }
@@ -110,24 +96,23 @@ void Graph::DFS()
 
 
 
-void Graph::DFS_visit(int u, int& time)
+bool Graph::DFS_visit(int u, int& time)
 {
     time++;
     this->d[u] = time;
     this->color[u] = 'g';
     this->visited[u] = true;
-
+    
     Node* v = head[u];
-    while(v != nullptr)
-    {
-        if(color[v->nodeKey] == 'w')
-        {
+    while(v != nullptr){
+        if(color[v->nodeKey] == 'w'){
             visited[v->nodeKey] = true;
             pi[v->nodeKey]= u;
             DFS_visit(v->nodeKey, time);
         }
-        else if (color[v->nodeKey] == 'b')
+        else if (color[v->nodeKey] == 'b'){
             hasCycle = true;
+        }
         
         v = v->next;
     }
@@ -168,17 +153,14 @@ void Graph::PrimMST(int start)
     */
     
     
-    for (int i = 0; i < nodeNum; ++i)
-    {
+    for (int i = 0; i < nodeNum; ++i){
         int maxVertex = ExtractMax(this->visited, this->weight);
         // cout << " max vertex" << maxVertex << endl;
         visited[maxVertex] = true;
         Node* v = head[maxVertex];
 
-        while(v != nullptr)
-        {
-            if(!visited[v->nodeKey] && v->cost > weight[v->nodeKey])
-            {   
+        while(v != nullptr){
+            if(!visited[v->nodeKey] && v->cost > weight[v->nodeKey]){   
                 pi[v->nodeKey] = maxVertex;
                 weight[v->nodeKey] = v->cost;
             }
@@ -228,11 +210,9 @@ void Graph::printRemoveEdge()
     // initially, we add new edges undirected a->b, b->a
     // now we only need to add those is in the input to remove 
     
-    for(int i = 0; i < nodeNum; i++)
-    {
+    for(int i = 0; i < nodeNum; i++){
         Node* a = this->head[i];
-        while(a!=  nullptr)
-        {    
+        while(a!=  nullptr){    
             // undirected
             if (  (pi[i] != a->nodeKey && pi[ a->nodeKey]!= i) ) // not in MST and not the starting point
             {
@@ -272,7 +252,7 @@ void BinaryHeap::HeapSort(std::vector<int>& data) {
     BuildMinHeap(data);
     // 1. Swap data[0] which is max value and data[i] so that the max value will be in correct location
     // 2. Do max-heapify for data[0]
-    for (int i = data.size() - 1; i >= 1; i--) {
+    for (int i = data.size() - 1; i >= 1; i--){
         swap(data[0],data[i]);
         heapSize--;
         MinHeapify(data,0);
@@ -281,8 +261,7 @@ void BinaryHeap::HeapSort(std::vector<int>& data) {
 
 void BinaryHeap::printMinHeap(std::vector<int>& data)
 {
-    for(int i = 0; i < data.size(); i++)
-    {
+    for(int i = 0; i < data.size(); i++){
         cout << data[i] << endl;
     }
 }
@@ -300,8 +279,7 @@ void BinaryHeap::MinHeapify(std::vector<int>& data, int root) {
         smallest = root;
     if (right < heapSize && data[right] < data[smallest])
         smallest = right;
-    if (smallest != root)
-    {
+    if (smallest != root){
         swap(data[smallest], data[root]);
         MinHeapify(data, smallest);
     }
@@ -324,6 +302,40 @@ int BinaryHeap::ExtractMaxFromHeap(std::vector<int>& data)
     data.pop_back();
     MinHeapify(data,0);
     return max;
+}
+
+void Graph::KruskalMST()
+{
+    
+    //countingSort(nodeList);
+
+
+
+}
+
+void Graph::countingSort()
+{
+    // given edgeList, sort the weight, and finish sortedEdgeList
+    const int n = edgeList.size();
+    std::vector<int> temp(201, 0);  // edge weight from 0 to 200, 201 numbers
+
+    for(int i = 0; i < n; ++i){
+        temp[edgeList[i].weight]++;
+    }
+    for(int i = 1; i <= 201; ++i){
+        temp[i] += temp[i-1];
+    }
+    sortedEdgeList.resize(n);
+    for(int i = n-1; i >=0; --i){
+        sortedEdgeList[temp[edgeList[i].weight] - 1] = edgeList[i];
+        --temp[edgeList[i].weight];
+    }
+
+    // check sorted edge list
+    cout << "sorted edge" << endl;
+    for(int i = 0; i < n; i++){
+        cout << sortedEdgeList[i].weight-100 << endl;
+    }
 }
 
 

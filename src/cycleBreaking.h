@@ -52,10 +52,13 @@ private:
 	node_arr remove;
 	// vp_arr visited_weight;
 	Node* getAdjListNode(int value, int weight, Node* head);
+	
 
 public:
 	std::vector<std::vector<int> > edgeSet;
 	std::vector<std::vector<int> > weightSet;
+	std::vector<Edge> edgeList;
+	std::vector<Edge> sortedEdgeList;
 	int nodeNum;	// number of nodes in the graph
 	int removeCost = 0;
 	bool hasCycle;
@@ -66,7 +69,7 @@ public:
 	~Graph();  // Destructor
 	void printGraph();
 	void printList(int i);  // print (start,end,weight) of a given vertix
-	void DFS_visit(int u, int& time);
+	bool DFS_visit(int u, int& time);
 	void printDFS();
 	void DFS();
 	void PrimMST(int start);
@@ -76,6 +79,8 @@ public:
 	void initialize();	
 	void printRemoveEdge();	
 	bool isCyclicUtil(int v, bool_arr visited, bool *rs);
+	void countingSort();
+	
 
 };
 
