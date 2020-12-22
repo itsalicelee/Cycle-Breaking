@@ -145,7 +145,9 @@ void Graph::PrimMST(int start)
     this->weight[start] = 0;
     this->pi[start] = -MAX_WEIGHT;
 
+    Node* v = head[start];
 
+    // cout << MST[0]->cost << " ***" << endl;
     /*
     //test min heap
     vector<int> temp = {3, 2 ,1, 6, 4,5};
@@ -166,6 +168,7 @@ void Graph::PrimMST(int start)
         visited[maxVertex] = true;
         Node* v = head[maxVertex];
 
+       
         while(v != nullptr){
             if(!visited[v->nodeKey] && v->cost > weight[v->nodeKey]){   
                 pi[v->nodeKey] = maxVertex;
@@ -175,7 +178,7 @@ void Graph::PrimMST(int start)
         }
 
     }
-    
+  
 }
 
 void Graph::printPrim()
@@ -185,6 +188,11 @@ void Graph::printPrim()
 	for (int i = 0; i < nodeNum; ++i){
 		cout <<  "i: " << i << ": " <<  "pi: " << pi[i] << ",   weight: " << weight[i] << " " << endl;
         totalCost += weight[i];
+        
+        // create new tree
+        
+
+
 	}
     cout << "Total cost is: " << totalCost << endl;
     cout << endl;
@@ -235,21 +243,47 @@ void Graph::printRemoveEdge()
             }
             a = a->next;
         }
-    }   
+    }
 
-
-    
-    
     cout << "========= Remove edges: (start,end,cost) =========" << endl;
     if (this->removeNode.size()!= 0)  // has cycle
     {
-        cout << this->removeCost << endl;
+       
         for(int i = 0 ; i < this->removeNode.size(); ++i)
+        {
             cout << this->removeNode[i].first << " " << this->removeNode[i].second->nodeKey << " " << removeNode[i].second->cost << endl;
+        }
+        cout << "initially" <<  this->removeCost  << endl;
         cout << "Has Cycle: " << removeNode.size() << " edges removed!" << endl;
+
+        int w = 0;
+        int cnt = 0;
+        cout << "-----------------" << endl;
+        for(int i = 0; i < this->removeNode.size(); ++i)
+        {
+            int from =  this->removeNode[i].first;
+            int to = this->removeNode[i].second->nodeKey;
+            int weight = this->removeNode[i].second->cost;
+            Node* u = head[from];
+            if (d[from] < d[to])  // edges to remove
+            {
+                cout << from << " " << to << " " << weight << endl;
+                w += weight;
+                cnt += 1;
+
+            }
+
+        }
+        cout << "w:" << w <<  ", cnt:" << cnt << endl;
+
+        // for(int i = 0 ; i < this->removeNode.size(); ++i)
+        //     cout << this->removeNode[i].first << " " << this->removeNode[i].second->nodeKey << " " << removeNode[i].second->cost << endl;
+        // cout << "Has Cycle: " << removeNode.size() << " edges removed!" << endl;
+    
     }
     else  // no cycle
-        cout << "No remove edges!" << endl;
+        cout << "No remove edges!" << endl;   
+    
     
 }
 
@@ -345,28 +379,4 @@ void Graph::countingSort()
     }
 }
 
-
-/* Reference
-bool Graph::isCyclicUtil(int v, bool_arr visited, bool *recStack) 
-{ 
-    if(visited[v] == false) 
-    { 
-        // Mark the current node as visited and part of recursion stack 
-        visited[v] = true; 
-        recStack[v] = true; 
-  
-        // Recur for all the vertices adjacent to this vertex 
-        list<int>::iterator i; 
-        for(i = head[v].begin(); i != head[v].end(); ++i) 
-        { 
-            if ( !visited[*i] && isCyclicUtil(*i, visited, recStack) ) 
-                return true; 
-            else if (recStack[*i]) 
-                return true; 
-        } 
-  
-    } 
-    recStack[v] = false;  // remove the vertex from recursion stack 
-    return false; 
-} 
-*/
+//////////////////////////////////////////////////////////////////

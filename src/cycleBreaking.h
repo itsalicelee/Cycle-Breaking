@@ -25,6 +25,7 @@ struct Node {
 	char color = 'w';
 	int d = 0;  // for DFS
 	int f = 0;  // for DFS
+	int rank = 0;  // for Kruskal
 };
 
 // Data structure to store graph edges
@@ -59,6 +60,7 @@ public:
 	std::vector<std::vector<int> > weightSet;
 	std::vector<Edge> edgeList;
 	std::vector<Edge> sortedEdgeList;
+	
 	int nodeNum;	// number of nodes in the graph
 	int removeCost = 0;
 	bool hasCycle;
@@ -77,7 +79,8 @@ public:
 	int  ExtractMax(bool_arr visited, int_arr weight);
 	void printPrim();
 	void initialize();	
-	void printRemoveEdge();	
+	// void removeEdge();	
+	void printRemoveEdge();
 	bool isCyclicUtil(int v, bool_arr visited, bool *rs);
 	void countingSort();
 	
