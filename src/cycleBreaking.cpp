@@ -28,6 +28,7 @@ Graph::Graph(int edgeNum, int nodeNum, char graphType)  // constructor
     // allocate memory
     head = new Node*[nodeNum];
     this->nodeNum = nodeNum;
+    this->edgeNum = edgeNum;
     this->graphType = graphType;
     
     // initialize head pointer for all vertices
@@ -215,9 +216,10 @@ int Graph::ExtractMax(bool_arr visited, int_arr weight)
     return minVertex;
 }
 
-void Graph::printRemoveEdge()
+void Graph::primRemoveEdge()
 {
-    
+    std::vector< std::pair<int, Node*> > removeNode;
+    int removeCost = 0;
     // initially, we add new edges undirected a->b, b->a
     // now we only need to add those is in the input to remove 
     
@@ -230,8 +232,8 @@ void Graph::printRemoveEdge()
                 // cout << "not in MST" <<  "i: " << i << ", nodeKey" << a->nodeKey <<  ", cost" <<  a->cost <<  endl;;
                 if (std::find(edgeSet[i].begin(),edgeSet[i].end(),a->nodeKey) != edgeSet[i].end())  // is origin input
                     {
-                        this->removeNode.push_back(std::make_pair(i,a)); 
-                        this->removeCost += a->cost;
+                        removeNode.push_back(std::make_pair(i,a)); 
+                        removeCost += a->cost;
                     } 
                     // removeNode is a vector of Pairs
                     // <(start1,Node1), (start2,Node2)...>
@@ -241,12 +243,12 @@ void Graph::printRemoveEdge()
         }
     }
 
-    cout << "========= Remove edges: (start,end,cost) =========" << endl;
-    if (this->removeNode.size()!= 0)  // has cycle
+    cout << "========= Prim Remove edges: (start,end,cost) =========" << endl;
+    if (removeNode.size()!= 0)  // has cycle
     {
-        for(int i = 0 ; i < this->removeNode.size(); ++i)
-            cout << this->removeNode[i].first << " " << this->removeNode[i].second->nodeKey << " " << removeNode[i].second->cost << endl;
-        cout << "Has Cycle: " << removeNode.size() << " edges removed!" << endl;
+        for(int i = 0 ; i < removeNode.size(); ++i)
+            cout << removeNode[i].first << " " << removeNode[i].second->nodeKey << " " << removeNode[i].second->cost << endl;
+        cout << "Has Cycle: " << removeNode.size() << " edges removed!\n" << "Cost: " << removeCost << endl;
     
     }
     else  // no cycle
@@ -314,7 +316,40 @@ int BinaryHeap::ExtractMaxFromHeap(std::vector<int>& data)
     return max;
 }
 
-void Graph::KruskalMST()
+////////////////Kruskal's////////////////////////////////////////////
+int Graph::find(subset subsets[], int i)
+{
+    // find root and make root as parent of i
+    // (path compression)
+    if (subsets[i].parent != i)
+        subsets[i].parent
+            = find(subsets, subsets[i].parent);
+ 
+    return subsets[i].parent;
+}
+
+void Graph::Union(subset subsets[], int x, int y)
+{
+    int xroot = find(subsets, x);
+    int yroot = find(subsets, y);
+ 
+    // Attach smaller rank tree under root of high
+    // rank tree (Union by Rank)
+    if (subsets[xroot].rank < subsets[yroot].rank)
+        subsets[xroot].parent = yroot;
+    else if (subsets[xroot].rank > subsets[yroot].rank)
+        subsets[yroot].parent = xroot;
+ 
+    // If ranks are same, then make one as root and
+    // increment its rank by one
+    else {
+        subsets[yroot].parent = xroot;
+        subsets[xroot].rank++;
+    }
+}
+
+
+Edge* Graph::KruskalMST()
 {
 
     int V = this-> nodeNum;
@@ -324,21 +359,6 @@ void Graph::KruskalMST()
     int e = 0; // An index variable, used for result[]
     int i = 0; // An index variable, used for sorted edges
  
-    // Step 1: Sort all the edges in non-decreasing
-    // order of their weight. If we are not allowed to
-    // change the given graph, we can create a copy of
-    // array of edges
-    // qsort(this->edge, graph->E, sizeof(graph->edge[0]),
-    //       myComp);
-    
-    // check sorted edge
-    
-    // cout << "sorted edge" << endl;
-    // cout << sortedEdgeList.size() << endl;
-    // for(int i = 0; i < this->sortedEdgeList.size(); i++){
-    //     cout << sortedEdgeList[i].weight-100 << endl;
-    // }
-
 
     // Allocate memory for creating V ssubsets
     subset* subsets = new subset[(V * sizeof(subset))];
@@ -372,25 +392,34 @@ void Graph::KruskalMST()
  
     // print the contents of result[] to display the
     // built MST
-    cout << "Following are the edges in the constructed "
-            "MST\n";
+    std::cout << "========= Kruskal MST =========\n";
+    
     int maxCost = 0, origWeight = 0;
+    std::vector<std::vector<int> > mst(nodeNum);  // create a new mst 
+    // mst.resize(nodeNum);
     for (size_t i = 0; i < e; ++i) 
     {
-        origWeight = result[i].weight - 100;
-        cout << result[i].src << " -- " << result[i].dest
-             << " == " << origWeight<< endl;
-        maxCost += origWeight;
+        std::cout << result[i].src << " -- " << result[i].dest
+             << " == " << result[i].weight<< endl;
+        maxCost += result[i].weight;
+        int src = result[i].src;
+        int dest = result[i].dest;
+
+        mst[src].push_back(dest);  //add the edges to mst
+        // mst[dest].push_back(src);  //add the edges to mst, in another direction
     }
     // return;
-    cout << "Minimum Cost Spanning Tree: " << maxCost << endl;
+    std::cout << "Maximum Cost: " << maxCost << endl;
+    
+    this->KruskalRemoveEdge(mst);
+
 }
 
 
 void Graph::countingSort()
 {
     // given edgeList, sort the weight, and finish sortedEdgeList
-    const int n = edgeList.size();
+    const int n = edgeNum;
     std::vector<int> temp(201, 0);  // edge weight from 0 to 200, 201 numbers
 
     for(int i = 0; i < n; ++i){
@@ -406,41 +435,99 @@ void Graph::countingSort()
     }
 
     std::reverse(sortedEdgeList.begin(),sortedEdgeList.end());
-    // check sorted edge list
-    // cout << "sorted edge" << endl;
-    // for(int i = 0; i < n; i++){
-    //     cout << sortedEdgeList[i].weight-100 << endl;
-    // }
-}
-//////////////////////////////////////////////////////////////////
-int Graph::find(subset subsets[], int i)
-{
-    // find root and make root as parent of i
-    // (path compression)
-    if (subsets[i].parent != i)
-        subsets[i].parent
-            = find(subsets, subsets[i].parent);
- 
-    return subsets[i].parent;
-}
-
-void Graph::Union(subset subsets[], int x, int y)
-{
-    int xroot = find(subsets, x);
-    int yroot = find(subsets, y);
- 
-    // Attach smaller rank tree under root of high
-    // rank tree (Union by Rank)
-    if (subsets[xroot].rank < subsets[yroot].rank)
-        subsets[xroot].parent = yroot;
-    else if (subsets[xroot].rank > subsets[yroot].rank)
-        subsets[yroot].parent = xroot;
- 
-    // If ranks are same, then make one as root and
-    // increment its rank by one
-    else {
-        subsets[yroot].parent = xroot;
-        subsets[xroot].rank++;
+    for(int i = 0; i < sortedEdgeList.size(); ++i){ 
+        sortedEdgeList[i].weight-=100;  // shift back weight to (-100, 100)
+        edgeList[i].weight -= 100;
     }
+
 }
 
+void Graph::KruskalRemoveEdge(std::vector<std::vector<int> > mst)
+{
+    //TODO: cannot use mst and ptr like this! see output
+
+    // vector<vector<Edge> > temp;
+    // temp.resize(nodeNum);
+    // for(int i = 0; i < edgeNum; ++i)
+    // {
+    //     int s = edgeList[i].src;
+    //     int d = edgeList[i].dest;
+    //     int w = edgeList[i].weight;
+    //     temp[s].push_back(edgeList[i]);
+    // }
+
+    for(int i = 0; i < mst.size(); i++){
+        for(int j = 0; j < mst[i].size(); j++)
+            cout << mst[i][j] << " ";
+        cout << endl;
+    }
+    cout << endl;
+
+
+    // print out mst
+    // for(int i = 0; i < mst.size(); i++){
+    //     for(int j = 0; j < mst[i].size(); j++){
+    //         if (mst[i].size() != 0)
+    //             cout << "MST: " << mst[i][j].src << " " << mst[i][j].dest << " "<< mst[i][j].weight << endl;}
+    // }
+    // for(int i = 0; i < edgeList.size(); i++)
+    //     cout << "edgelist" <<  edgeList[i].src << " " <<  edgeList[i].dest << " " <<    edgeList[i].weight << endl;
+    
+    std::vector<Edge> removeEdge;
+    // for(int i = 0 ; i < nodeNum; i++)
+    // {
+    //     int s = temp[i].src;
+    //     int d = temp[i][i].dest;
+    //     int w = temp[i][i].weight;
+    //     cout << "edgelist" <<  s << " " <<  d << " " << w << endl;
+    //     cout << "size" << mst[s].size() << endl;
+    //     for(int j = 0; j < mst[s].size(); j++)
+    //     {   
+    //         if (mst[s].size()!= 0){
+    //             cout << "mst" <<  mst[s][j].src << " " <<  mst[s][j].dest << " " << mst[s][j].weight << endl;
+                
+    //             if (d != mst[s][j].dest ) 
+    //             { cout << "*" << endl; removeEdge.push_back(temp[i]);}
+    //         }
+    //     }
+
+    // }
+    ////////  
+    
+
+    //ptr
+    Edge temp;
+    for(int i = 0; i < nodeNum; i++){
+        Node* a = this->head[i];
+        while(a!=  nullptr){
+            
+            if (!(std::find(mst[i].begin(),mst[i].end(),a->nodeKey) != mst[i].end())){
+                temp.src = i;
+                temp.dest = a->nodeKey;
+                temp.weight = a->cost;
+                removeEdge.push_back(temp);
+            }   
+            a = a->next;
+        }
+    }
+
+
+
+
+
+    int costSum = 0;
+    std::cout << "========= Kruskal Remove edges: (start,end,cost) =========" << endl;
+    if (removeEdge.size()!= 0)  // has cycle
+    {
+        for(int i = 0 ; i < removeEdge.size(); ++i){
+            cout << removeEdge[i].src << " " << removeEdge[i].dest << " " << removeEdge[i].weight << endl;
+            costSum += removeEdge[i].weight;
+        }
+        cout << "Has Cycle: " << removeEdge.size() << " edges removed!\n" << "Cost: " << costSum << endl;
+    
+    }
+    else  // no cycle
+        cout << "No remove edges!" << endl;   
+
+    
+}

@@ -29,8 +29,14 @@ struct Node {
 };
 
 // Data structure to store graph edges
-struct Edge {
+class Edge {
+public:
 	int src, dest, weight;
+	// bool operator ==(const Edge& edge2) const{
+	// 	if()
+
+	// }
+
 };
 
 class subset {
@@ -47,7 +53,7 @@ public:
 class Graph
 {
 private:
-	
+	int edgeNum;
 	char graphType;
 	char_arr color;
 	int_arr d, f, weight, pi;
@@ -60,13 +66,14 @@ private:
 public:
 	std::vector<std::vector<int> > edgeSet;
 	std::vector<std::vector<int> > weightSet;
-	std::vector<Edge> edgeList;
+	std::vector<Edge > edgeList;
 	std::vector<Edge> sortedEdgeList;
-	int edgeNum;
+	
 	int nodeNum;	// number of nodes in the graph
-	int removeCost = 0;
+	
 	bool hasCycle;
-	std::vector< std::pair<int, Node*> > removeNode;
+	
+	
 	Node** head;  // An array of pointers to Node to represent adjacency list
 	Graph(int nodeNum, char graphType);  // Constructor
 	Graph(int edgeNum, int nodeNum, char graphType);  // Constructor
@@ -77,12 +84,13 @@ public:
 	void printDFS();
 	void DFS();
 	void PrimMST(int start);
-	void KruskalMST();
+	Edge* KruskalMST();
+	void KruskalRemoveEdge(std::vector<std::vector<int> > mst);
 	int  ExtractMax(bool_arr visited, int_arr weight);
 	void printPrim();
 	void initialize();	
 	// void removeEdge();	
-	void printRemoveEdge();
+	void primRemoveEdge();
 	bool isCyclicUtil(int v, bool_arr visited, bool *rs);
 	void countingSort();
 	int find(subset subsets[], int i);

@@ -110,9 +110,11 @@ int main(int argc, char* argv[])
     G.printPrim();
     // G.DFS();
     // G.printDFS();
-    // G.printRemoveEdge();
-    G.countingSort();
+    G.primRemoveEdge();
+
+    G.countingSort();  // must be done before Kruskal
     G.KruskalMST();
+    
 
 
     
@@ -132,14 +134,14 @@ int main(int argc, char* argv[])
     */
 
     
-    if (G.removeNode.size()!= 0)  // has cycle
-    {
-        fout << G.removeCost << endl;
-        for(int i = 0 ; i < G.removeNode.size(); ++i)
-            fout << G.removeNode[i].first << " " << G.removeNode[i].second->nodeKey << " " << G.removeNode[i].second->cost << endl;
-    }
-    else  // no cycle
-        fout << "0";
+    // if (G.removeNode.size()!= 0)  // has cycle
+    // {
+    //     fout << G.removeCost << endl;
+    //     for(int i = 0 ; i < G.removeNode.size(); ++i)
+    //         fout << G.removeNode[i].first << " " << G.removeNode[i].second->nodeKey << " " << G.removeNode[i].second->cost << endl;
+    // }
+    // else  // no cycle
+    //     fout << "0";
 
     fin.close();
     fout.close();
