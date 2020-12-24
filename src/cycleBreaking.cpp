@@ -188,10 +188,6 @@ void Graph::printPrim()
 	for (int i = 0; i < nodeNum; ++i){
 		cout <<  "i: " << i << ": " <<  "pi: " << pi[i] << ",   weight: " << weight[i] << " " << endl;
         totalCost += weight[i];
-        
-        // create new tree
-        
-
 
 	}
     cout << "Total cost is: " << totalCost << endl;
@@ -248,37 +244,9 @@ void Graph::printRemoveEdge()
     cout << "========= Remove edges: (start,end,cost) =========" << endl;
     if (this->removeNode.size()!= 0)  // has cycle
     {
-       
         for(int i = 0 ; i < this->removeNode.size(); ++i)
-        {
             cout << this->removeNode[i].first << " " << this->removeNode[i].second->nodeKey << " " << removeNode[i].second->cost << endl;
-        }
-        cout << "initially" <<  this->removeCost  << endl;
         cout << "Has Cycle: " << removeNode.size() << " edges removed!" << endl;
-
-        int w = 0;
-        int cnt = 0;
-        cout << "-----------------" << endl;
-        for(int i = 0; i < this->removeNode.size(); ++i)
-        {
-            int from =  this->removeNode[i].first;
-            int to = this->removeNode[i].second->nodeKey;
-            int weight = this->removeNode[i].second->cost;
-            Node* u = head[from];
-            if (d[from] < d[to])  // edges to remove
-            {
-                cout << from << " " << to << " " << weight << endl;
-                w += weight;
-                cnt += 1;
-
-            }
-
-        }
-        cout << "w:" << w <<  ", cnt:" << cnt << endl;
-
-        // for(int i = 0 ; i < this->removeNode.size(); ++i)
-        //     cout << this->removeNode[i].first << " " << this->removeNode[i].second->nodeKey << " " << removeNode[i].second->cost << endl;
-        // cout << "Has Cycle: " << removeNode.size() << " edges removed!" << endl;
     
     }
     else  // no cycle
@@ -286,6 +254,7 @@ void Graph::printRemoveEdge()
     
     
 }
+/////////////////////////////////////////////////////////////
 
 // Heap sort method
 void BinaryHeap::HeapSort(std::vector<int>& data) {
@@ -347,12 +316,76 @@ int BinaryHeap::ExtractMaxFromHeap(std::vector<int>& data)
 
 void Graph::KruskalMST()
 {
+
+    int V = this-> nodeNum;
+    int E = this-> sortedEdgeList.size();
+    // cout << "edge num " << this->edgeNum;  // i dont know why it is 0
+    Edge result[V]; // Tnis will store the resultant MST
+    int e = 0; // An index variable, used for result[]
+    int i = 0; // An index variable, used for sorted edges
+ 
+    // Step 1: Sort all the edges in non-decreasing
+    // order of their weight. If we are not allowed to
+    // change the given graph, we can create a copy of
+    // array of edges
+    // qsort(this->edge, graph->E, sizeof(graph->edge[0]),
+    //       myComp);
     
-    //countingSort(nodeList);
+    // check sorted edge
+    
+    // cout << "sorted edge" << endl;
+    // cout << sortedEdgeList.size() << endl;
+    // for(int i = 0; i < this->sortedEdgeList.size(); i++){
+    //     cout << sortedEdgeList[i].weight-100 << endl;
+    // }
 
 
+    // Allocate memory for creating V ssubsets
+    subset* subsets = new subset[(V * sizeof(subset))];
+ 
+    // Create V subsets with single elements
+    for (int v = 0; v < V; ++v) 
+    {
+        subsets[v].parent = v;
+        subsets[v].rank = 0;
+    }
 
+    // Number of edges to be taken is equal to V-1
+    while (e < V - 1 && i < E) 
+    {
+        // Pick the largest edge 
+        Edge next_edge = this->sortedEdgeList[i++];
+ 
+        int x = find(subsets, next_edge.src);
+        int y = find(subsets, next_edge.dest);
+
+
+        // If including this edge does't cause cycle,
+        // include it in result and increment the index
+        // of result for next edge
+        if (x != y) {
+            result[e++] = next_edge;
+            Union(subsets, x, y);
+        }
+        // Else discard the next_edge
+    }
+ 
+    // print the contents of result[] to display the
+    // built MST
+    cout << "Following are the edges in the constructed "
+            "MST\n";
+    int maxCost = 0, origWeight = 0;
+    for (size_t i = 0; i < e; ++i) 
+    {
+        origWeight = result[i].weight - 100;
+        cout << result[i].src << " -- " << result[i].dest
+             << " == " << origWeight<< endl;
+        maxCost += origWeight;
+    }
+    // return;
+    cout << "Minimum Cost Spanning Tree: " << maxCost << endl;
 }
+
 
 void Graph::countingSort()
 {
@@ -372,11 +405,42 @@ void Graph::countingSort()
         --temp[edgeList[i].weight];
     }
 
+    std::reverse(sortedEdgeList.begin(),sortedEdgeList.end());
     // check sorted edge list
-    cout << "sorted edge" << endl;
-    for(int i = 0; i < n; i++){
-        cout << sortedEdgeList[i].weight-100 << endl;
+    // cout << "sorted edge" << endl;
+    // for(int i = 0; i < n; i++){
+    //     cout << sortedEdgeList[i].weight-100 << endl;
+    // }
+}
+//////////////////////////////////////////////////////////////////
+int Graph::find(subset subsets[], int i)
+{
+    // find root and make root as parent of i
+    // (path compression)
+    if (subsets[i].parent != i)
+        subsets[i].parent
+            = find(subsets, subsets[i].parent);
+ 
+    return subsets[i].parent;
+}
+
+void Graph::Union(subset subsets[], int x, int y)
+{
+    int xroot = find(subsets, x);
+    int yroot = find(subsets, y);
+ 
+    // Attach smaller rank tree under root of high
+    // rank tree (Union by Rank)
+    if (subsets[xroot].rank < subsets[yroot].rank)
+        subsets[xroot].parent = yroot;
+    else if (subsets[xroot].rank > subsets[yroot].rank)
+        subsets[yroot].parent = xroot;
+ 
+    // If ranks are same, then make one as root and
+    // increment its rank by one
+    else {
+        subsets[yroot].parent = xroot;
+        subsets[xroot].rank++;
     }
 }
 
-//////////////////////////////////////////////////////////////////

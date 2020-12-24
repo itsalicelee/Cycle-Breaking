@@ -33,9 +33,11 @@ struct Edge {
 	int src, dest, weight;
 };
 
-struct subset {
+class subset {
+public:
     int parent;
     int rank;
+	
 };
 // struct First{
 // 	Node* head;
@@ -45,7 +47,7 @@ struct subset {
 class Graph
 {
 private:
-	int edgeNum;
+	
 	char graphType;
 	char_arr color;
 	int_arr d, f, weight, pi;
@@ -60,7 +62,7 @@ public:
 	std::vector<std::vector<int> > weightSet;
 	std::vector<Edge> edgeList;
 	std::vector<Edge> sortedEdgeList;
-	
+	int edgeNum;
 	int nodeNum;	// number of nodes in the graph
 	int removeCost = 0;
 	bool hasCycle;
@@ -83,6 +85,8 @@ public:
 	void printRemoveEdge();
 	bool isCyclicUtil(int v, bool_arr visited, bool *rs);
 	void countingSort();
+	int find(subset subsets[], int i);
+	void Union(subset subsets[], int x, int y);
 	
 
 };

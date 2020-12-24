@@ -54,7 +54,6 @@ int main(int argc, char* argv[])
     G.weightSet.resize(nodeNum);
  
 
-
     for(size_t i = 0; i < edgeNum; ++i){
         fin >> start >> end >> weight;
         Node* v = new Node();
@@ -109,10 +108,11 @@ int main(int argc, char* argv[])
    
     G.PrimMST(0);
     G.printPrim();
-    G.DFS();
-    G.printDFS();
-    G.printRemoveEdge();
-    // G.countingSort();
+    // G.DFS();
+    // G.printDFS();
+    // G.printRemoveEdge();
+    G.countingSort();
+    G.KruskalMST();
 
 
     
