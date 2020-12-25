@@ -84,7 +84,7 @@ public:
 	void printDFS();
 	void DFS();
 	void PrimMST(int start);
-	Edge* KruskalMST();
+	void KruskalMST();
 	void KruskalRemoveEdge(std::vector<std::vector<int> > mst);
 	int  ExtractMax(bool_arr visited, int_arr weight);
 	void printPrim();
