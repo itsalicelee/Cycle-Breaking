@@ -84,7 +84,7 @@ int main(int argc, char* argv[])
             anEdge.src = start;
             anEdge.dest =  end;
             anEdge.weight = weight+100;
-            G.edgeList.push_back(anEdge);
+            // G.edgeList.push_back(anEdge);
         }
     }
    

@@ -322,8 +322,7 @@ int Graph::find(subset subsets[], int i)
     // find root and make root as parent of i
     // (path compression)
     if (subsets[i].parent != i)
-        subsets[i].parent
-            = find(subsets, subsets[i].parent);
+        subsets[i].parent = find(subsets, subsets[i].parent);
  
     return subsets[i].parent;
 }
@@ -353,7 +352,7 @@ Edge* Graph::KruskalMST()
 {
 
     int V = this-> nodeNum;
-    int E = this-> sortedEdgeList.size();
+    int E = this-> edgeNum;
     // cout << "edge num " << this->edgeNum;  // i dont know why it is 0
     Edge result[V]; // Tnis will store the resultant MST
     int e = 0; // An index variable, used for result[]
@@ -375,6 +374,7 @@ Edge* Graph::KruskalMST()
     {
         // Pick the largest edge 
         Edge next_edge = this->sortedEdgeList[i++];
+        // cout << "choose" << next_edge.src << " " << next_edge.dest << " " <<next_edge.weight << endl;
  
         int x = find(subsets, next_edge.src);
         int y = find(subsets, next_edge.dest);
@@ -406,7 +406,7 @@ Edge* Graph::KruskalMST()
         int dest = result[i].dest;
 
         mst[src].push_back(dest);  //add the edges to mst
-        // mst[dest].push_back(src);  //add the edges to mst, in another direction
+        mst[dest].push_back(src);  //add the edges to mst, in another direction
     }
     // return;
     std::cout << "Maximum Cost: " << maxCost << endl;
@@ -439,6 +439,9 @@ void Graph::countingSort()
         sortedEdgeList[i].weight-=100;  // shift back weight to (-100, 100)
         edgeList[i].weight -= 100;
     }
+    // check counting sort
+    // for(int i = 0 ; i < sortedEdgeList.size() ; ++i)
+    //     cout << sortedEdgeList[i].src << " " << sortedEdgeList[i].dest << " " << sortedEdgeList[i].weight << endl;
 
 }
 
@@ -456,12 +459,12 @@ void Graph::KruskalRemoveEdge(std::vector<std::vector<int> > mst)
     //     temp[s].push_back(edgeList[i]);
     // }
 
-    for(int i = 0; i < mst.size(); i++){
-        for(int j = 0; j < mst[i].size(); j++)
-            cout << mst[i][j] << " ";
-        cout << endl;
-    }
-    cout << endl;
+    // for(int i = 0; i < mst.size(); i++){
+    //     for(int j = 0; j < mst[i].size(); j++)
+    //         cout << mst[i][j] << " ";
+    //     cout << endl;
+    // }
+    // cout << endl;
 
 
     // print out mst
@@ -502,11 +505,13 @@ void Graph::KruskalRemoveEdge(std::vector<std::vector<int> > mst)
         while(a!=  nullptr){
             
             if (!(std::find(mst[i].begin(),mst[i].end(),a->nodeKey) != mst[i].end())){
+                if (std::find(edgeSet[i].begin(),edgeSet[i].end(),a->nodeKey) != edgeSet[i].end()){  // is origin input
                 temp.src = i;
                 temp.dest = a->nodeKey;
                 temp.weight = a->cost;
                 removeEdge.push_back(temp);
-            }   
+                }
+            }
             a = a->next;
         }
     }
@@ -520,7 +525,7 @@ void Graph::KruskalRemoveEdge(std::vector<std::vector<int> > mst)
     if (removeEdge.size()!= 0)  // has cycle
     {
         for(int i = 0 ; i < removeEdge.size(); ++i){
-            cout << removeEdge[i].src << " " << removeEdge[i].dest << " " << removeEdge[i].weight << endl;
+            // cout << removeEdge[i].src << " " << removeEdge[i].dest << " " << removeEdge[i].weight << endl;
             costSum += removeEdge[i].weight;
         }
         cout << "Has Cycle: " << removeEdge.size() << " edges removed!\n" << "Cost: " << costSum << endl;
