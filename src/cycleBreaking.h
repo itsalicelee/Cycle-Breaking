@@ -55,7 +55,7 @@ class Graph
 private:
 	int edgeNum;
 	char graphType;
-	char_arr color;
+    char_arr color;
 	int_arr d, f, weight, pi;
 	bool_arr visited;
 	node_arr remove;
@@ -67,13 +67,13 @@ public:
 	std::vector<std::vector<int> > edgeSet;
 	std::vector<std::vector<int> > weightSet;
 	std::vector<Edge > edgeList;
-	std::vector<Edge> sortedEdgeList;
+	
 	
 	int nodeNum;	// number of nodes in the graph
 	
 	bool hasCycle;
 	
-	
+	std::vector<std::vector<Node*> > h;
 	Node** head;  // An array of pointers to Node to represent adjacency list
 	Graph(int nodeNum, char graphType);  // Constructor
 	Graph(int edgeNum, int nodeNum, char graphType);  // Constructor
@@ -85,14 +85,15 @@ public:
 	void DFS();
 	void PrimMST(int start);
 	void KruskalMST();
-	void KruskalRemoveEdge(std::vector<std::vector<int> > mst);
+	void KruskalRemoveEdge(std::vector<std::vector<int> > mst, std::vector<Edge>);
 	int  ExtractMax(bool_arr visited, int_arr weight);
 	void printPrim();
 	void initialize();	
 	// void removeEdge();	
 	void primRemoveEdge();
 	bool isCyclicUtil(int v, bool_arr visited, bool *rs);
-	void countingSort();
+	std::vector<Edge > countingSort(std::vector<Edge > edgeList);
+	void removeEdge(std::vector<Edge>& tree, std::vector<Edge>& removeEdge);
 	int find(subset subsets[], int i);
 	void Union(subset subsets[], int x, int y);
 	

@@ -5,7 +5,6 @@
 //  Date       2020/12/10
 // **************************************************************************
 /*
-TODO
 - add positive edges to MST until it has a cycle
 
 */
@@ -48,7 +47,7 @@ int main(int argc, char* argv[])
     int start, end, weight;
     Graph G(edgeNum, nodeNum, graphType); // create a graph
     Edge anEdge;
-    Graph tree(nodeNum-1, nodeNum, graphType);
+    // Graph tree(nodeNum-1, nodeNum, graphType);
     // allocate memory for edgeSet and weightSet
     G.edgeSet.resize(nodeNum);
     G.weightSet.resize(nodeNum);
@@ -64,6 +63,7 @@ int main(int argc, char* argv[])
         anEdge.src = start;
         anEdge.dest = end;
         anEdge.weight = weight+100;
+        G.h[start].push_back(v);
         
 
         G.edgeList.push_back(anEdge);
@@ -85,6 +85,7 @@ int main(int argc, char* argv[])
             anEdge.dest =  end;
             anEdge.weight = weight+100;
             // G.edgeList.push_back(anEdge);
+            G.h[end].push_back(u);
         }
     }
    
@@ -105,14 +106,15 @@ int main(int argc, char* argv[])
 
     // G.printGraph();
     // G.printList(1);
+    
    
-    G.PrimMST(0);
-    G.printPrim();
+    // G.PrimMST(0);
+    // G.printPrim();
     // G.DFS();
     // G.printDFS();
-    G.primRemoveEdge();
+    // G.primRemoveEdge();
 
-    G.countingSort();  // must be done before Kruskal
+
     G.KruskalMST();
     
 
