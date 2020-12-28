@@ -3,6 +3,7 @@
 #include<utility>
 #include<stdlib.h>
 #include<set>
+#include<list>
 #include<algorithm>
 #include<iostream>
 #include"cycleBreaking.h"
@@ -17,7 +18,8 @@ void Graph::initialize()  // initialize d, f, pi, color, array
         pi[i] = -1;
         color[i] = 'w';
         weight[i] = -MAX_WEIGHT;
-        visited[i] = false;
+        visit[i] = false;
+        
         // visited_weight[i].first = false;
         // visited_weight[i].second = -MAX_WEIGHT;
         
@@ -27,7 +29,7 @@ void Graph::initialize()  // initialize d, f, pi, color, array
 Graph::Graph(int edgeNum, int nodeNum, char graphType)  // constructor
 {
     // allocate memory
-    h.resize(nodeNum);
+    h = new list<int>[nodeNum];
     head = new Node*[nodeNum];
     this->nodeNum = nodeNum;
     this->edgeNum = edgeNum;
@@ -42,7 +44,7 @@ Graph::Graph(int edgeNum, int nodeNum, char graphType)  // constructor
         pi.push_back(0);
 		color.push_back('w');
         weight.push_back(0);
-        visited.push_back(false);
+        visit.push_back(false);
 
     }
     
@@ -63,10 +65,11 @@ void Graph::printGraph()
         std::cout << endl;
     }
 
-    for(int i = 0; i < nodeNum; ++i){
-        for(int j = 0; j < h[i].size(); j++)
-            std::cout << i << ": " << h[i][j]->nodeKey  << " " << h[i][j]->cost << endl;
-    }
+    // h is a vector of vector of nodes
+    // for(int i = 0; i < nodeNum; ++i){
+    //     for(int j = 0; j < h[i].size(); j++)
+    //         std::cout << i << ": " << h[i][j]->nodeKey  << " " << h[i][j]->cost << endl;
+    // }
 }
 
 // Destructor
@@ -90,8 +93,9 @@ void Graph::printList(int i)
 		ptr = ptr->next;
 	}
 
-    for(int k = 0; k < h[i].size(); ++k)
-        std::cout << h[i][k]->nodeKey << " "<<  h[i][k]->cost << endl;
+    //  h is a vector of vector of nodes
+    // for(int k = 0; k < h[i].size(); ++k)
+    //     std::cout << h[i][k]->nodeKey << " "<<  h[i][k]->cost << endl;
     std::cout << endl;
     std::cout << endl;
 }
@@ -102,7 +106,7 @@ void Graph::DFS()
     this->initialize();
     int time = 0;
 
-
+    
     for(int i = 0; i < nodeNum; ++i)
     {
         if (color[i] == 'w')
@@ -119,17 +123,17 @@ bool Graph::DFS_visit(int u, int& time)
     time++;
     this->d[u] = time;
     this->color[u] = 'g';
-    this->visited[u] = true;
+    this->visit[u] = true;
     
     Node* v = head[u];
     while(v != nullptr){
         if(color[v->nodeKey] == 'w'){
-            visited[v->nodeKey] = true;
+            visit[v->nodeKey] = true;
             pi[v->nodeKey]= u;
             DFS_visit(v->nodeKey, time);
         }
         else if (color[v->nodeKey] == 'b'){
-            hasCycle = true;
+            hasCycle = true;  // not sure
         }
         
         v = v->next;
@@ -173,14 +177,14 @@ void Graph::PrimMST(int start)
     
     
     for (int i = 0; i < nodeNum; ++i){
-        int maxVertex = ExtractMax(this->visited, this->weight);
+        int maxVertex = ExtractMax(this->visit, this->weight);
         // cout << " max vertex" << maxVertex << endl;
-        visited[maxVertex] = true;
+        visit[maxVertex] = true;
         Node* v = head[maxVertex];
 
        
         while(v != nullptr){
-            if(!visited[v->nodeKey] && v->cost > weight[v->nodeKey]){   
+            if(!visit[v->nodeKey] && v->cost > weight[v->nodeKey]){   
                 pi[v->nodeKey] = maxVertex;
                 weight[v->nodeKey] = v->cost;
             }
@@ -400,8 +404,8 @@ void Graph::KruskalMST()
     // mst.resize(nodeNum);
     for (size_t i = 0; i < e; ++i) 
     {
-        // std::cout << tree[i].src << " -- " << tree[i].dest
-        //      << " == " << tree[i].weight<< endl;
+        std::cout << tree[i].src << " -- " << tree[i].dest
+             << " == " << tree[i].weight<< endl;
         maxCost += tree[i].weight;
         int src = tree[i].src;
         int dest = tree[i].dest;
@@ -487,7 +491,7 @@ void Graph::KruskalRemoveEdge(std::vector<std::vector<int> > mst, std::vector<Ed
     if (removeEdge.size()!= 0)  // has cycle
     {
         for(int i = 0 ; i < removeEdge.size(); ++i){
-            // cout << removeEdge[i].src << " " << removeEdge[i].dest << " " << removeEdge[i].weight << endl;
+            std::cout << removeEdge[i].src << " " << removeEdge[i].dest << " " << removeEdge[i].weight << endl;
             costSum += removeEdge[i].weight;
         }
         std::cout << "Has Cycle: " << removeEdge.size() << " edges removed!\n" << "Cost: " << costSum << endl;
@@ -496,8 +500,8 @@ void Graph::KruskalRemoveEdge(std::vector<std::vector<int> > mst, std::vector<Ed
     else  // no cycle
         std::cout << "No remove edges!" << endl;   
     
-
-    this->removeEdge(treeVec,removeEdge);
+    if (graphType == 'd')
+        this->removeEdge(treeVec,removeEdge);
 }
 ////////////////////////////////////
 
@@ -518,7 +522,7 @@ void Graph::removeEdge(std::vector<Edge>& treeVec, std::vector<Edge>& removeEdge
 
     std::vector<Edge> sortedRemove = this->countingSort(removeEdge);
 
-    // cout << "check sorted remove edge " << endl;
+    cout << "check sorted remove edge " << endl;
     for(int i = 0; i < sortedRemove.size(); ++i)
         std::cout << sortedRemove[i].src << " " << sortedRemove[i].dest << " " << sortedRemove[i].weight << endl;
 
@@ -533,6 +537,7 @@ void Graph::removeEdge(std::vector<Edge>& treeVec, std::vector<Edge>& removeEdge
     	v->cost = treeVec[i].weight ;
     	v->next = T.head[treeVec[i].src];
     	T.head[treeVec[i].src] = v;
+        T.h[treeVec[i].src].push_back(treeVec[i].dest);  // for dfs
     }
 
     
@@ -545,39 +550,118 @@ void Graph::removeEdge(std::vector<Edge>& treeVec, std::vector<Edge>& removeEdge
     T.hasCycle = false;
     // T.DFS();
     // T.printDFS();
+    cout << "i start with" << sortedRemove.size()-1 << endl;
     int i = sortedRemove.size()-1;  // counter variable; used to choose which edge to add to mst
     
-    while(i > 0)
+    while(i >= 0)
     {
-    //TODO  
+    // TODO
+    // DFS is still not working
+    // must be careful about current node number when using dfs
+
     std::cout << "after adding" << endl; 
     Edge anEdge = sortedRemove[i];
     int start = anEdge.src;
     int dest = anEdge.dest;
     int weight = anEdge.weight;
 
+    if (dest < 0)
+        break;
+
     Node* u = new Node();
     u ->nodeKey = dest;
     u->cost = weight ;
     u->next = T.head[start];
     T.head[start] = u;
-    
+    T.h[start].push_back(dest);
+    cout << "start" << start << " " << dest << endl;
+    cout << "cycle" <<T.isCyclic() << endl;
     /////
     T.printGraph();
+    // T.DFS();
+    // T.printDFS();
 
-    // /////
-    T.DFS();
-    T.printDFS();
-    std::cout << "cycle? " << T.hasCycle <<  endl;
-    if (T.hasCycle == false){
-        sortedRemove.pop_back();
+    if (T.isCyclic()){
+        cout << "!!Cycle Detected!!" << endl;
+        // TODO : remove a node from adjancency list
+        T.h[start].pop_back();
+
     }
+    else{  // no cycle 
+        sortedRemove[i].weight = -MAX_WEIGHT;  // remove it from sortedRemove
+    }
+
+
     i--;
+    // check in the loop
+    // std::cout << "removing" << endl;
+    // for(int j = 0; j < sortedRemove.size(); j++){
+    //     if(sortedRemove[j].weight != -MAX_WEIGHT)
+    //         std::cout << sortedRemove[j].src << " " << sortedRemove[j].dest << " " << sortedRemove[j].weight << endl;
+    // }
 
     }
 
     std::cout << "final solution" << endl;
-    for(int j = 0; j < sortedRemove.size(); j++)
-        std::cout << sortedRemove[j].src << " " << sortedRemove[j].dest << " " << sortedRemove[j].weight << endl;
+    for(int j = 0; j < sortedRemove.size(); j++){
+        if(sortedRemove[j].weight != -MAX_WEIGHT)
+            std::cout << sortedRemove[j].src << " " << sortedRemove[j].dest << " " << sortedRemove[j].weight << endl;
+    }
+
+    // Graph test(3, 3, graphType);
+    // test.h[0].push_back(1);
+    // test.h[1].push_back(2);
+    // test.h[2].push_back(0);
+    // cout << "test ans" << test.isCyclic() ;
     
+}
+
+
+
+
+bool Graph::isCyclicUtil(int v, bool visited[], bool *recStack)
+{
+	if (visited[v] == false)
+	{
+		// Mark the current node as visited and part of recursion stack
+		visited[v] = true;
+		recStack[v] = true;
+
+		// Recur for all the vertices adjacent to this vertex
+		list<int>::iterator i;
+		for (i = h[v].begin(); i != h[v].end(); ++i)
+		{
+			if (!visited[*i] && isCyclicUtil(*i, visited, recStack))
+				return true;
+			else if (recStack[*i])
+				return true;
+		}
+
+	}
+
+	recStack[v] = false;  // remove the vertex from recursion stack
+	return false;
+}
+
+// Returns true if the graph contains a cycle, else false.
+// This function is a variation of DFS() in http://www.geeksforgeeks.org/archives/18212
+bool Graph::isCyclic()
+{
+	// Mark all the vertices as not visited and not part of recursion
+	// stack
+	bool *visited = new bool[nodeNum];
+	bool *recStack = new bool[nodeNum];
+	for (int i = 0; i < nodeNum; i++)
+	{
+		visited[i] = false;
+		recStack[i] = false;
+	}
+
+	// Call the recursive helper function to detect cycle in different
+	// DFS trees
+	for (int i = 0; i < nodeNum; i++)
+		if (isCyclicUtil(i, visited, recStack))
+			return true;
+
+	return false;
 }

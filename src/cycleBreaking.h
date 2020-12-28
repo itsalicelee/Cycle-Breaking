@@ -57,7 +57,7 @@ private:
 	char graphType;
     char_arr color;
 	int_arr d, f, weight, pi;
-	bool_arr visited;
+	bool_arr visit;
 	node_arr remove;
 	// vp_arr visited_weight;
 	Node* getAdjListNode(int value, int weight, Node* head);
@@ -72,8 +72,8 @@ public:
 	int nodeNum;	// number of nodes in the graph
 	
 	bool hasCycle;
+	std::list<int>* h;
 	
-	std::vector<std::vector<Node*> > h;
 	Node** head;  // An array of pointers to Node to represent adjacency list
 	Graph(int nodeNum, char graphType);  // Constructor
 	Graph(int edgeNum, int nodeNum, char graphType);  // Constructor
@@ -96,6 +96,8 @@ public:
 	void removeEdge(std::vector<Edge>& tree, std::vector<Edge>& removeEdge);
 	int find(subset subsets[], int i);
 	void Union(subset subsets[], int x, int y);
+	bool isCyclicUtil(int v, bool visited[], bool *recStack);
+	bool isCyclic();
 	
 
 };
