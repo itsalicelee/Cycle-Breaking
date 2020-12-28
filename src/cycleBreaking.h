@@ -47,6 +47,7 @@ public:
 class Graph
 {
 private:
+	int cost = 0;
 	int edgeNum;
 	char graphType;
     char_arr color;
@@ -61,7 +62,7 @@ public:
 	std::vector<std::vector<int> > edgeSet;
 	std::vector<std::vector<int> > weightSet;
 	std::vector<Edge > edgeList;
-
+	
 	
 	int nodeNum;	// number of nodes in the graph
 	
@@ -78,8 +79,8 @@ public:
 	void printDFS();
 	void DFS();
 	void PrimMST(int start);
-	void KruskalMST();
-	void KruskalRemoveEdge(std::vector<std::vector<int> > mst, std::vector<Edge>);
+	std::vector<Edge> KruskalMST();
+	std::vector<Edge> KruskalRemoveEdge(std::vector<std::vector<int> > mst, std::vector<Edge> treeVec);
 	int  ExtractMax(bool_arr visited, int_arr weight);
 	void printPrim();
 	void initialize();	
@@ -87,11 +88,12 @@ public:
 	void primRemoveEdge();
 	bool isCyclicUtil(int v, bool_arr visited, bool *rs);
 	std::vector<Edge > countingSort(std::vector<Edge > edgeList);
-	void addEdge(std::vector<Edge>& tree, std::vector<Edge>& removeEdge, int cnt);
+	std::vector<Edge> addEdge(std::vector<Edge>& tree, std::vector<Edge>& removeEdget);
 	int find(subset subsets[], int i);
 	void Union(subset subsets[], int x, int y);
 	bool isCyclicUtil(int v, bool visited[], bool *recStack);
 	bool isCyclic();
+	int getCost(){return cost;};
 	
 
 };

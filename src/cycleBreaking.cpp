@@ -182,7 +182,7 @@ void Graph::Union(subset subsets[], int x, int y)
 }
 
 
-void Graph::KruskalMST()
+std::vector<Edge> Graph::KruskalMST()
 {
 
     int V = this-> nodeNum;
@@ -251,8 +251,9 @@ void Graph::KruskalMST()
     // std::cout << "Maximum Cost: " << maxCost << endl;
     std::vector<Edge> treeVec(tree, tree+V-1);  // used in remove!
     // std::vector<Edge > removeEdge = this->KruskalRemoveEdge(mst, treeVec);
-    this->KruskalRemoveEdge(mst, treeVec);
-
+    std::vector<Edge> ans = this->KruskalRemoveEdge(mst, treeVec);
+    
+    return ans;
     // return removeEdge;
     // test tree in array
     // for(int i  = 0; i < V-1; i++)
@@ -293,7 +294,7 @@ std::vector<Edge > Graph::countingSort(std::vector<Edge > list)
     return sortedEdgeList;
 }
 
-void Graph::KruskalRemoveEdge(std::vector<std::vector<int> > mst, std::vector<Edge> treeVec)
+std::vector<Edge> Graph::KruskalRemoveEdge(std::vector<std::vector<int> > mst, std::vector<Edge> treeVec)
 {
     std::vector<Edge> removeEdge;
     Edge temp;
@@ -314,30 +315,33 @@ void Graph::KruskalRemoveEdge(std::vector<std::vector<int> > mst, std::vector<Ed
     }
 
 
-    int cnt = 0;
+    
     std::cout << "========= Kruskal Remove edges: (start,end,cost) =========" << endl;
     if (removeEdge.size()!= 0)  // has cycle
     {
         for(int i = 0 ; i < removeEdge.size(); ++i){
             std::cout << removeEdge[i].src << " " << removeEdge[i].dest << " " << removeEdge[i].weight << endl;
-            cnt += removeEdge[i].weight;
+            cost += removeEdge[i].weight;
         }
-        std::cout << "Has Cycle: " << removeEdge.size() << " edges removed!\n" << "Cost: " << cnt<< endl;
+        std::cout << "Has Cycle: " << removeEdge.size() << " edges removed!\n" << "Cost: " << cost<< endl;
     
     }
     else  // no cycle
         std::cout << "No remove edges!" << endl;   
     
+    std::vector<Edge> ans = removeEdge;
     if (graphType == 'd')
-        this->addEdge(treeVec, removeEdge, cnt);
+         ans = this->addEdge(treeVec, removeEdge);
+
+    return ans;
     
     // return removeEdge;
 }
 ////////////////////////////////////
 
-void Graph::addEdge(std::vector<Edge>& treeVec, std::vector<Edge>& removeEdge, int cnt)
+std::vector<Edge> Graph::addEdge(std::vector<Edge>& treeVec, std::vector<Edge>& removeEdge)
 {
-
+   
     std::cout << "remove Edge function start" << endl;
 
     // test original remove edge
@@ -411,12 +415,12 @@ void Graph::addEdge(std::vector<Edge>& treeVec, std::vector<Edge>& removeEdge, i
 
     if (T.isCyclic()){
         // cout << "!!Cycle Detected!!" << endl;
-        // TODO : 
         T.h[start].pop_back(); // cannot put in mst, remove  from adjancency list
     }
     else{  // no cycle 
+        cost -= sortedRemove[i].weight;
         sortedRemove[i].weight = -MAX_WEIGHT;  // remove it from sortedRemove
-        cnt -= sortedRemove[i].weight;
+        
     }
 
 
@@ -429,19 +433,22 @@ void Graph::addEdge(std::vector<Edge>& treeVec, std::vector<Edge>& removeEdge, i
     // }
 
     }
-    int cost = 0;
+    
+    int finalCost = 0;
     int edgecnt  = 0;
     std::cout << "final solution" << endl;
     std::cout << "--------------" << endl;
 
     for(int j = 0; j < sortedRemove.size(); j++){
         if(sortedRemove[j].weight != -MAX_WEIGHT){
-            cost += sortedRemove[j].weight;
+            finalCost += sortedRemove[j].weight;
             edgecnt += 1;
             std::cout << sortedRemove[j].src << " " << sortedRemove[j].dest << " " << sortedRemove[j].weight << endl;
         }
     }
-    cout << "cost: " << cost << ", mst edge cnt: " << edgecnt << endl;
+
+    cout << "final cost: " << finalCost << ", mst edge cnt: " << edgecnt << endl;
+    return sortedRemove;
     
 }
 

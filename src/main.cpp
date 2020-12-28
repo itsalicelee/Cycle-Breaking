@@ -105,8 +105,9 @@ int main(int argc, char* argv[])
     // G.printDFS();
     // G.primRemoveEdge();
 
-
-    G.KruskalMST();
+    
+    std::vector<Edge> final = G.KruskalMST();
+    int cost = G.getCost();
     
 
 
@@ -127,15 +128,16 @@ int main(int argc, char* argv[])
     */
 
     
-    // if (final.size()!= 0)  // has cycle
-    // {
-    //     // fout << finalCost << endl;
-    //     for(int i = 0 ; i < final.size(); ++i)
-
-    //         fout << final[i].src << " " << final[i].dest << " " << final[i].weight << endl;
-    // }
-    // else  // no cycle
-    //     fout << "0";
+    if (final.size()!= 0)  // has cycle
+    {
+        fout << cost << endl;
+        for(int i = 0 ; i < final.size(); ++i){
+            if(final[i].weight != -MAX_WEIGHT)
+                fout << final[i].src << " " << final[i].dest << " " << final[i].weight << endl;
+        }
+    }
+    else  // no cycle
+        fout << "0";
 
     fin.close();
     fout.close();
