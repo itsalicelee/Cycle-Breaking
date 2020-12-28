@@ -32,7 +32,7 @@ Graph::Graph(int edgeNum, int nodeNum, char graphType)  // constructor
     this->graphType = graphType;
     
     // initialize head pointer for all vertices
-    for (size_t i = 0; i < nodeNum; ++i){
+    for (int i = 0; i < nodeNum; ++i){
         this->head[i] = nullptr;
         pi.push_back(0);
 		d.push_back(0);
@@ -51,11 +51,11 @@ void Graph::printGraph()
 {
     std::cout << "========= Graph =========" << endl;
     // print adjacency list representation of graph
-    for (size_t i = 0; i < nodeNum; ++i){  
+    for (int i = 0; i < nodeNum; ++i){  
         std::cout << "head" << i << ":" << endl;
         Node* a = head[i];
         while(a != nullptr){
-            std::cout << "("<<a->nodeKey << "," << a->cost  << ")"<< endl;
+            std::cout << "("<< i << "," <<a->nodeKey << "," << a->cost  << ")"<< endl;
             a = a ->next;
         }
         std::cout << endl;
@@ -71,7 +71,7 @@ void Graph::printGraph()
 // Destructor
 Graph::~Graph()
 {
-    for (size_t i = 0; i < nodeNum; i++)
+    for (int i = 0; i < nodeNum; i++)
         delete[] head[i];
     delete[] head;
 }
@@ -103,7 +103,7 @@ void Graph::DFS()
     int time = 0;
     
     
-    for(size_t i = 0; i < nodeNum; ++i)
+    for(int i = 0; i < nodeNum; ++i)
     {
         if (color[i] == 'w')
         {
@@ -150,10 +150,9 @@ void Graph::printDFS()
 
 
 
-/////////////////////////////////////////////////////////////
 
 
-////////////////Kruskal's////////////////////////////////////////////
+////////////////Kruskal's////////////////////////////
 int Graph::find(subset subsets[], int i)
 {
     if (subsets[i].parent != i)
@@ -201,7 +200,7 @@ void Graph::KruskalMST()
     subset* subsets = new subset[(V * sizeof(subset))];
  
     // Create V subsets with single elements
-    for (size_t v = 0; v < V; ++v) 
+    for (int v = 0; v < V; ++v) 
     {
         subsets[v].parent = v;
         subsets[v].rank = 0;
@@ -236,7 +235,7 @@ void Graph::KruskalMST()
     int maxCost = 0, origWeight = 0;
     std::vector<std::vector<int> > mst(nodeNum);  // create a new mst 
     // mst.resize(nodeNum);
-    for (size_t i = 0; i < e; ++i) 
+    for (int i = 0; i < e; ++i) 
     {
         std::cout << tree[i].src << " -- " << tree[i].dest
              << " == " << tree[i].weight<< endl;
@@ -248,11 +247,13 @@ void Graph::KruskalMST()
         if (graphType == 'u')
             mst[dest].push_back(src);  //add the edges to mst, in another direction
     }
-    // return;
-    std::cout << "Maximum Cost: " << maxCost << endl;
+    // return
+    // std::cout << "Maximum Cost: " << maxCost << endl;
     std::vector<Edge> treeVec(tree, tree+V-1);  // used in remove!
+    // std::vector<Edge > removeEdge = this->KruskalRemoveEdge(mst, treeVec);
     this->KruskalRemoveEdge(mst, treeVec);
 
+    // return removeEdge;
     // test tree in array
     // for(int i  = 0; i < V-1; i++)
     //     cout << tree[i].src << " " << tree[i].dest << " " << tree[i].weight << endl;
@@ -266,41 +267,37 @@ void Graph::KruskalMST()
 
 std::vector<Edge > Graph::countingSort(std::vector<Edge > list)
 {
-    std::vector<Edge> sortedEdgeList;
     // given edgeList, sort the weight, and finish sortedEdgeList
+    std::vector<Edge> sortedEdgeList;
     const int n = list.size();
     std::vector<int> temp(201, 0);  // edge weight from 0 to 200, 201 numbers
 
-    for(size_t i = 0; i < n; ++i){
+    for(int i = 0; i < n; ++i){
         temp[list[i].weight]++;
     }
-    for(size_t i = 1; i <= 201; ++i){
+    for(int i = 1; i <= 201; ++i){
         temp[i] += temp[i-1];
     }
     sortedEdgeList.resize(n);
-    for(size_t i = n-1; i >=0; --i){
+    for(int i = n-1; i >=0; --i){
         sortedEdgeList[temp[list[i].weight] - 1] = list[i];
         --temp[list[i].weight];
     }
 
     
-    for(size_t i = 0; i < sortedEdgeList.size(); ++i){ 
+    for(int i = 0; i < sortedEdgeList.size(); ++i){ 
         sortedEdgeList[i].weight-=100;  // shift back weight to (-100, 100)
         list[i].weight -= 100;
     }
-    // check counting sort
-    // cout << "cnting sort" << endl;
-    // for(int i = 0 ; i < sortedEdgeList.size() ; ++i)
-    //     cout << sortedEdgeList[i].src << " " << sortedEdgeList[i].dest << " " << sortedEdgeList[i].weight << endl;
+   
     return sortedEdgeList;
-
 }
 
 void Graph::KruskalRemoveEdge(std::vector<std::vector<int> > mst, std::vector<Edge> treeVec)
 {
     std::vector<Edge> removeEdge;
     Edge temp;
-    for(size_t i = 0; i < nodeNum; ++i){
+    for(int i = 0; i < nodeNum; ++i){
         Node* a = this->head[i];
         while(a!=  nullptr){
 
@@ -317,34 +314,37 @@ void Graph::KruskalRemoveEdge(std::vector<std::vector<int> > mst, std::vector<Ed
     }
 
 
-    int costSum = 0;
+    int cnt = 0;
     std::cout << "========= Kruskal Remove edges: (start,end,cost) =========" << endl;
     if (removeEdge.size()!= 0)  // has cycle
     {
-        for(size_t i = 0 ; i < removeEdge.size(); ++i){
+        for(int i = 0 ; i < removeEdge.size(); ++i){
             std::cout << removeEdge[i].src << " " << removeEdge[i].dest << " " << removeEdge[i].weight << endl;
-            costSum += removeEdge[i].weight;
+            cnt += removeEdge[i].weight;
         }
-        std::cout << "Has Cycle: " << removeEdge.size() << " edges removed!\n" << "Cost: " << costSum << endl;
+        std::cout << "Has Cycle: " << removeEdge.size() << " edges removed!\n" << "Cost: " << cnt<< endl;
     
     }
     else  // no cycle
         std::cout << "No remove edges!" << endl;   
     
     if (graphType == 'd')
-        this->removeEdge(treeVec,removeEdge);
+        this->addEdge(treeVec, removeEdge, cnt);
+    
+    // return removeEdge;
 }
 ////////////////////////////////////
 
-void Graph::removeEdge(std::vector<Edge>& treeVec, std::vector<Edge>& removeEdge)
+void Graph::addEdge(std::vector<Edge>& treeVec, std::vector<Edge>& removeEdge, int cnt)
 {
+
     std::cout << "remove Edge function start" << endl;
 
     // test original remove edge
     // for(int i = 0; i < removeEdge.size(); ++i)
     //     cout << removeEdge[i].src << " " << removeEdge[i].dest << " " << removeEdge[i].weight << endl;
 
-    for(size_t i = 0; i < removeEdge.size(); ++i)
+    for(int i = 0; i < removeEdge.size(); ++i)
         removeEdge[i].weight += 100;  // shift the edge so as to do counting sort
     
    
@@ -360,7 +360,7 @@ void Graph::removeEdge(std::vector<Edge>& treeVec, std::vector<Edge>& removeEdge
 
 
     // add edges to original mst tree
-    for(size_t i = 0 ; i < treeVec.size(); ++i)
+    for(int i = 0 ; i < treeVec.size(); ++i)
     {
         // cout << treeVec[i].src << " " << treeVec[i].dest << " " << treeVec[i].weight << endl;
         Node* v = new Node();
@@ -371,8 +371,10 @@ void Graph::removeEdge(std::vector<Edge>& treeVec, std::vector<Edge>& removeEdge
         T.h[treeVec[i].src].push_back(treeVec[i].dest);  // for dfs
     }
 
+    
+    std::cout << "print T DFS" << endl;
 
-    T.printGraph();
+    // T.printGraph();
     // T.DFS();
     // T.printDFS();
 
@@ -385,7 +387,7 @@ void Graph::removeEdge(std::vector<Edge>& treeVec, std::vector<Edge>& removeEdge
     while(i >= 0)
     {
 
-    std::cout << "after adding" << endl; 
+    // std::cout << "after adding" << endl; 
     Edge anEdge = sortedRemove[i];
     int start = anEdge.src;
     int dest = anEdge.dest;
@@ -393,26 +395,28 @@ void Graph::removeEdge(std::vector<Edge>& treeVec, std::vector<Edge>& removeEdge
 
     if (weight < 0)  // we dont want to add negative weight to mst
         break;
-
+    
     Node* u = new Node();
     u ->nodeKey = dest;
     u->cost = weight ;
     u->next = T.head[start];
     T.head[start] = u;
     T.h[start].push_back(dest);
-    cout << "start" << start << " " << dest << endl;
-    cout << "cycle" <<T.isCyclic() << endl;
-    /////
-    T.printGraph();
+    
+    // cout << "start" << start << " " << dest << " " << weight << endl;
+    // cout << "cycle" <<T.isCyclic() << endl;
+    // T.printGraph();
     // T.DFS();
     // T.printDFS();
 
     if (T.isCyclic()){
-        cout << "!!Cycle Detected!!" << endl;
-        T.h[start].pop_back(); // cannot put in mst, remove from adjancency list
+        // cout << "!!Cycle Detected!!" << endl;
+        // TODO : 
+        T.h[start].pop_back(); // cannot put in mst, remove  from adjancency list
     }
     else{  // no cycle 
         sortedRemove[i].weight = -MAX_WEIGHT;  // remove it from sortedRemove
+        cnt -= sortedRemove[i].weight;
     }
 
 
@@ -425,12 +429,19 @@ void Graph::removeEdge(std::vector<Edge>& treeVec, std::vector<Edge>& removeEdge
     // }
 
     }
-
+    int cost = 0;
+    int edgecnt  = 0;
     std::cout << "final solution" << endl;
-    for(size_t j = 0; j < sortedRemove.size(); j++){
-        if(sortedRemove[j].weight != -MAX_WEIGHT)
+    std::cout << "--------------" << endl;
+
+    for(int j = 0; j < sortedRemove.size(); j++){
+        if(sortedRemove[j].weight != -MAX_WEIGHT){
+            cost += sortedRemove[j].weight;
+            edgecnt += 1;
             std::cout << sortedRemove[j].src << " " << sortedRemove[j].dest << " " << sortedRemove[j].weight << endl;
+        }
     }
+    cout << "cost: " << cost << ", mst edge cnt: " << edgecnt << endl;
     
 }
 
@@ -469,7 +480,7 @@ bool Graph::isCyclic()
 	// stack
 	bool *visited = new bool[nodeNum];
 	bool *recStack = new bool[nodeNum];
-	for (size_t i = 0; i < nodeNum; i++)
+	for (int i = 0; i < nodeNum; i++)
 	{
 		visited[i] = false;
 		recStack[i] = false;
@@ -477,12 +488,14 @@ bool Graph::isCyclic()
 
 	// Call the recursive helper function to detect cycle in different
 	// DFS trees
-	for (size_t i = 0; i < nodeNum; i++)
+	for (int i = 0; i < nodeNum; i++)
 		if (isCyclicUtil(i, visited, recStack))
 			return true;
 
 	return false;
 }
+
+
 /*
 void Graph::PrimMST(int start)
 {

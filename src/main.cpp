@@ -61,7 +61,8 @@ int main(int argc, char* argv[])
         anEdge.dest = end;
         anEdge.weight = weight+100;
         G.h[start].push_back(end);
-        
+        // TODO
+        // change the edgelist to a 2d bool array
 
         G.edgeList.push_back(anEdge);
 
@@ -126,11 +127,12 @@ int main(int argc, char* argv[])
     */
 
     
-    // if (G.removeNode.size()!= 0)  // has cycle
+    // if (final.size()!= 0)  // has cycle
     // {
-    //     fout << G.removeCost << endl;
-    //     for(int i = 0 ; i < G.removeNode.size(); ++i)
-    //         fout << G.removeNode[i].first << " " << G.removeNode[i].second->nodeKey << " " << G.removeNode[i].second->cost << endl;
+    //     // fout << finalCost << endl;
+    //     for(int i = 0 ; i < final.size(); ++i)
+
+    //         fout << final[i].src << " " << final[i].dest << " " << final[i].weight << endl;
     // }
     // else  // no cycle
     //     fout << "0";

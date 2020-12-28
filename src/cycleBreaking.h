@@ -16,6 +16,8 @@ typedef 					std::list<struct Node> node_arr;
 // typedef 					std::vector<std::vector<bool ,int> > vp_arr;
 
 const int MAX_WEIGHT = 999;
+
+
 // Data structure to store Adjacency list nodes
 struct Node {
 	int nodeKey, cost;
@@ -32,11 +34,6 @@ struct Node {
 class Edge {
 public:
 	int src, dest, weight;
-	// bool operator ==(const Edge& edge2) const{
-	// 	if()
-
-	// }
-
 };
 
 class subset {
@@ -45,10 +42,7 @@ public:
     int rank;
 	
 };
-// struct First{
-// 	Node* head;
-// 	Node* tail;
-// };
+
 
 class Graph
 {
@@ -67,7 +61,7 @@ public:
 	std::vector<std::vector<int> > edgeSet;
 	std::vector<std::vector<int> > weightSet;
 	std::vector<Edge > edgeList;
-	
+
 	
 	int nodeNum;	// number of nodes in the graph
 	
@@ -93,7 +87,7 @@ public:
 	void primRemoveEdge();
 	bool isCyclicUtil(int v, bool_arr visited, bool *rs);
 	std::vector<Edge > countingSort(std::vector<Edge > edgeList);
-	void removeEdge(std::vector<Edge>& tree, std::vector<Edge>& removeEdge);
+	void addEdge(std::vector<Edge>& tree, std::vector<Edge>& removeEdge, int cnt);
 	int find(subset subsets[], int i);
 	void Union(subset subsets[], int x, int y);
 	bool isCyclicUtil(int v, bool visited[], bool *recStack);
