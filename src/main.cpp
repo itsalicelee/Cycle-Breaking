@@ -4,10 +4,7 @@
 //  Synopsis   [The main program of 2020 fall Algorithm PA3:Cycle Breaking]
 //  Date       2020/12/10
 // **************************************************************************
-/*
-- add positive edges to MST until it has a cycle
 
-*/
 
 #include<iostream>
 #include<fstream>
@@ -90,14 +87,7 @@ int main(int argc, char* argv[])
     }
    
 
-    // test edgeSet and weightSet 
-    // cout << "========= Original Input =========" << endl;
-    // for(int i = 0; i < nodeNum; i++)
-    // {
-    //     for(int j = 0; j < G.edgeSet.size(); j++)
-    //         if (j < G.edgeSet[i].size())
-    //             cout << i << " "<< G.edgeSet[i][j] << " " << G.weightSet[i][j] << endl;
-    // }
+
 
     
 

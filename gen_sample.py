@@ -13,8 +13,8 @@ python3 gen_sample.py
 import random
 import networkx as nx
 directed = False  # can be modified
-vertex = 100  # can be modified
-edge = 1000  # can be modified
+vertex = 5000  # can be modified
+edge = 10000  # can be modified
 
 filename = "./inputs/test_" + str(edge) + ".in"
 f = open(filename, "w")
