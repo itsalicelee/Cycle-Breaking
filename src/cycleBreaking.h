@@ -47,6 +47,7 @@ public:
 class Graph
 {
 private:
+	
 	int cost = 0;
 	int edgeNum;
 	char graphType;
@@ -55,7 +56,7 @@ private:
 	bool_arr visit;
 	node_arr remove;
 	// vp_arr visited_weight;
-	Node* getAdjListNode(int value, int weight, Node* head);
+	// Node* getAdjListNode(int value, int weight, Node* head);
 	
 
 public:
@@ -65,8 +66,8 @@ public:
 	
 	
 	int nodeNum;	// number of nodes in the graph
-	
-	bool hasCycle;
+	bool** map;
+	// bool hasCycle;
 	std::list<int>* h;
 	
 	Node** head;  // An array of pointers to Node to represent adjacency list
@@ -86,13 +87,12 @@ public:
 	void initialize();	
 	// void removeEdge();	
 	void primRemoveEdge();
-	bool isCyclicUtil(int v, bool_arr visited, bool *rs);
 	std::vector<Edge > countingSort(std::vector<Edge > edgeList);
 	std::vector<Edge> addEdge(std::vector<Edge>& tree, std::vector<Edge>& removeEdget);
 	int find(subset subsets[], int i);
 	void Union(subset subsets[], int x, int y);
 	bool isCyclicUtil(int v, bool visited[], bool *recStack);
-	bool isCyclic();
+	bool hasCycle();
 	int getCost(){return cost;};
 	
 

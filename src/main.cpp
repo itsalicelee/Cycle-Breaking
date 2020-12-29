@@ -48,11 +48,21 @@ int main(int argc, char* argv[])
     // allocate memory for edgeSet and weightSet
     G.edgeSet.resize(nodeNum);
     G.weightSet.resize(nodeNum);
- 
 
+    G.map = new bool* [nodeNum];
+    for(size_t i = 0; i < nodeNum; ++i)
+        G.map[i] = new bool [nodeNum];
+    
+    for(size_t i = 0; i < nodeNum; ++i){
+        for(size_t j = 0; j < nodeNum; ++j)
+            G.map[i][j] = false;
+    }
+
+    
+    
     for(size_t i = 0; i < edgeNum; ++i){
         fin >> start >> end >> weight;
-        Node* v = new Node();
+        Node* v  = new Node;
     	v->nodeKey = end;
     	v->cost = weight;
     	v->next = G.head[start];
@@ -61,15 +71,19 @@ int main(int argc, char* argv[])
         anEdge.dest = end;
         anEdge.weight = weight+100;
         G.h[start].push_back(end);
+        
         // TODO
         // change the edgelist to a 2d bool array
+        G.map[start][end] = true;
+        
+        
 
         G.edgeList.push_back(anEdge);
 
         // memorize the initial edges
         G.edgeSet[start].push_back(end);
         G.weightSet[start].push_back(weight);
-
+       
 
         if(graphType == 'u')
         {
@@ -84,9 +98,10 @@ int main(int argc, char* argv[])
             anEdge.weight = weight+100;
             // G.edgeList.push_back(anEdge);
             G.h[end].push_back(start);
+
         }
     }
-   
+    
 
 
 
@@ -95,29 +110,27 @@ int main(int argc, char* argv[])
     
     //////////// algorithm start ////////////////
 
+    // just for test
     // G.printGraph();
     // G.printList(1);
-    
-   
     // G.PrimMST(0);
     // G.printPrim();
     // G.DFS();
     // G.printDFS();
     // G.primRemoveEdge();
 
-    
+    // only need these
     std::vector<Edge> final = G.KruskalMST();
     int cost = G.getCost();
-    
-
 
     
-    // if(G.hasCycle == true)
-    //     cout << "This Graph Has Cycle!!!" << endl;
-    // else
-    //     cout << "This Graph Has No Cycle!!!" << endl;
+    // release memory
+    for(size_t i = 0; i < nodeNum; ++i)
+        delete[] G.map[i];
+    delete[] G.map;
+
     
-    
+
 
     //////////// write the output file ///////////
     
