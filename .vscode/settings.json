@@ -70,5 +70,6 @@
         "__tree": "cpp",
         "set": "cpp",
         "filesystem": "cpp"
-    }
+    },
+    "python.pythonPath": "/usr/bin/python3"
 }

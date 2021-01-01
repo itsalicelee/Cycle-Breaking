@@ -43,13 +43,9 @@ int main(int argc, char* argv[])
     
     int start, end, weight;
     Graph G(edgeNum, nodeNum, graphType); // create a graph
-    Edge anEdge;
-    // Graph tree(nodeNum-1, nodeNum, graphType);
-    // allocate memory for edgeSet and weightSet
-    G.edgeSet.resize(nodeNum);
-    G.weightSet.resize(nodeNum);
-
-    G.map = new bool* [nodeNum];
+    
+   
+    G.map = new bool* [nodeNum];  // bool table for memorize initial input
     for(size_t i = 0; i < nodeNum; ++i)
         G.map[i] = new bool [nodeNum];
     
@@ -58,8 +54,10 @@ int main(int argc, char* argv[])
             G.map[i][j] = false;
     }
 
-    
-    
+    // allocate memory for edgeSet and weightSet
+    // G.edgeSet.resize(nodeNum);
+    // G.weightSet.resize(nodeNum);
+    Edge anEdge;
     for(size_t i = 0; i < edgeNum; ++i){
         fin >> start >> end >> weight;
         Node* v  = new Node;
@@ -72,17 +70,14 @@ int main(int argc, char* argv[])
         anEdge.weight = weight+100;
         G.h[start].push_back(end);
         
-        // TODO
-        // change the edgelist to a 2d bool array
-        G.map[start][end] = true;
         
-        
-
-        G.edgeList.push_back(anEdge);
+        G.map[start][end] = true;  // map records the initial input
+    
+        G.edgeList.push_back(anEdge);  // used for counting sort
 
         // memorize the initial edges
-        G.edgeSet[start].push_back(end);
-        G.weightSet[start].push_back(weight);
+        // G.edgeSet[start].push_back(end);
+        // G.weightSet[start].push_back(weight);
        
 
         if(graphType == 'u')
@@ -96,7 +91,6 @@ int main(int argc, char* argv[])
             anEdge.src = start;
             anEdge.dest =  end;
             anEdge.weight = weight+100;
-            // G.edgeList.push_back(anEdge);
             G.h[end].push_back(start);
 
         }
