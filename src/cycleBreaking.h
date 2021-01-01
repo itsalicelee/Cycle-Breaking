@@ -5,24 +5,12 @@
 #include <iostream> 
 
 
-#ifndef _CYCLE_BREAKING_H
-#define _CYCLE_BREAKING_H
-
-
-typedef						std::vector<int> int_arr;
-typedef						std::vector<char> char_arr;
-typedef 					std::vector<bool> bool_arr;
-typedef 					std::list<struct Node> node_arr;
-typedef 					std::vector<std::vector<bool ,int> > vp_arr;
-
 const int MAX_WEIGHT = 999;
-
 
 // Data structure to store Adjacency list nodes
 struct Node {
 	int nodeKey, cost;
 	Node* root;
-	//Node* pi = nullptr;
 	Node* next;
 	char color = 'w';
 	int d = 0;  // for DFS
@@ -48,95 +36,39 @@ class Graph
 {
 private:
 	
-	int cost = 0;
-	int edgeNum;
-	char graphType;
-    char_arr color;
-	int_arr d, f, pi;
-	int_arr weight;
-	bool_arr visit;
-	node_arr remove;
+	int 					cost = 0;
+	int 					edgeNum;
+	char 					graphType;
+    std::vector<char> 		color;
+	std::vector<int> 		d, f, pi;
+	std::vector<int> 		weight;
+	std::vector<bool> 		visit;
+	std::list<struct Node> 	remove;
 	
 	// Node* getAdjListNode(int value, int weight, Node* head);
 	
 
 public:
-	std::vector<Edge> edgeList;
-	int nodeNum;	// number of nodes in the graph
-	bool** map;
-	std::list<int>* h;
-	
-	Node** head;  // An array of pointers to Node to represent adjacency list
+	std::vector<Edge>		edgeList;
+	int 					nodeNum;	// number of nodes in the graph
+	bool** 					map;
+	std::list<int>* 		h;
+	Node** 					head;  // An array of pointers to Node to represent adjacency list
+
+	void 				printGraph();
+	void 				printList(int i);  // print (start,end,weight) of a given vertix
+	int 				find(subset subsets[], int i);
+	void 				Union(subset subsets[], int x, int y);
+	std::vector<Edge> 	KruskalMST();
+	std::vector<Edge> 	KruskalRemoveEdge(std::vector<std::vector<int> > mst, std::vector<Edge> treeVec);
+	std::vector<Edge> 	countingSort(std::vector<Edge > edgeList);
+	std::vector<Edge> 	addEdge(std::vector<Edge>& tree, std::vector<Edge>& removeEdget);
+	bool 				isCycleUtil(int i, bool visited[], bool *recStack);
+	bool 				hasCycle();
+	int 				getCost(){return cost;};
 	Graph(int edgeNum, int nodeNum, char graphType);  // Constructor
 	~Graph();  // Destructor
-	void printGraph();
-	void printList(int i);  // print (start,end,weight) of a given vertix
-	std::vector<Edge> KruskalMST();
-	std::vector<Edge> KruskalRemoveEdge(std::vector<std::vector<int> > mst, std::vector<Edge> treeVec);
-	
-	
-	
-	std::vector<Edge > countingSort(std::vector<Edge > edgeList);
-	std::vector<Edge> addEdge(std::vector<Edge>& tree, std::vector<Edge>& removeEdget);
-	int find(subset subsets[], int i);
-	void Union(subset subsets[], int x, int y);
-	bool isCyclicUtil(int v, bool visited[], bool *recStack);
-	bool hasCycle();
-	int getCost(){return cost;};
-	
-	// std::vector<std::vector<int> > edgeSet;
-	// std::vector<std::vector<int> > weightSet;
-	// void printPrim();
-	// void printDFS();
-	// bool DFS_visit(int u, int& time);
-	// void DFS();
-	// void PrimMST(int start);
-	// void primRemoveEdge();
-	// int  ExtractMax(bool_arr visited, int_arr weight);
-	// void initialize();		
-	
-
 };
 
 
-
-// Data structure for Min Heap
-// struct PriorityQueue 
-// {
-// private:
-//     // vector to store heap elements
-//     std::vector<int> A;
-//     int PARENT(int i) { return (i - 1) / 2; }  // don't call this function if i is already a root
-//     int LEFT(int i) { return (2 * i + 1); }  // return left child of A[i]    
-//     int RIGHT(int i) { return (2 * i + 2);}  // return right child of A[i] 
- 
-//     // Recursive Heapify-down algorithm
-//     // the node at index i and its two direct children
-//     void heapify_down(int i);  // violates the heap property
-//     void heapify_up(int i);  // Recursive Heapify-up algorithm
-    
-// public:
-//     unsigned int size(){return A.size();}  // return size of the heap
-//     bool empty(){return size() == 0;}  // function to check if heap is empty or not
-//     void push(int key);  // insert key into the heap
-//     void pop();  // function to remove element with lowest priority (present at root)
-//     int top();  // function to return element with lowest priority (present at root)
-// 	bool inQueue(int n);
-// 	void printQueue();
-// };
-
-
-// class BinaryHeap {
-// private:
-//         void    MinHeapify(std::vector<int>&, int); // make tree with given root be a max-heap 
-//         void    BuildMinHeap(std::vector<int>&); // make data become a max-heap
-
-// public:
-// 		int     heapSize; // heap size used in heap sort
-// 		void    HeapSort(std::vector<int>&); // sort data using heap sort
-// 		int 	ExtractMaxFromHeap(std::vector<int>&);
-// 		void  	printMinHeap(std::vector<int>& );
-
-// };
-
-#endif
+// #endif

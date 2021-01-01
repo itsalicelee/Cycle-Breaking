@@ -60,7 +60,7 @@ int main(int argc, char* argv[])
     Edge anEdge;
     for(size_t i = 0; i < edgeNum; ++i){
         fin >> start >> end >> weight;
-        Node* v  = new Node;
+        Node* v = new Node;
     	v->nodeKey = end;
     	v->cost = weight;
     	v->next = G.head[start];
@@ -74,6 +74,7 @@ int main(int argc, char* argv[])
         G.map[start][end] = true;  // map records the initial input
     
         G.edgeList.push_back(anEdge);  // used for counting sort
+        
 
         // memorize the initial edges
         // G.edgeSet[start].push_back(end);
@@ -95,25 +96,9 @@ int main(int argc, char* argv[])
 
         }
     }
-    
-
-
-
-    
-
-    
+        
     //////////// algorithm start ////////////////
 
-    // just for test
-    // G.printGraph();
-    // G.printList(1);
-    // G.PrimMST(0);
-    // G.printPrim();
-    // G.DFS();
-    // G.printDFS();
-    // G.primRemoveEdge();
-
-    // only need these
     std::vector<Edge> final = G.KruskalMST();
     int cost = G.getCost();
 
@@ -139,7 +124,7 @@ int main(int argc, char* argv[])
     {
         fout << cost << endl;
         for(int i = 0 ; i < final.size(); ++i){
-            if(final[i].weight != -MAX_WEIGHT)
+            if(final[i].weight != MAX_WEIGHT)
                 fout << final[i].src << " " << final[i].dest << " " << final[i].weight << endl;
         }
     }
